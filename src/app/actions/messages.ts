@@ -9,10 +9,6 @@ import { revalidateTag } from 'next/cache';
 export async function getMessages(conversationId: string) {
   const user = await getCurrentUser();
 
-  if (!user) {
-    throw new Error('User not found');
-  }
-
   const conversationMessages = await db
     .select()
     .from(messages)
