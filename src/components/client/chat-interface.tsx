@@ -3,14 +3,10 @@
 import { getAnswer } from '@/app/actions/ai';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useConversations } from '@/hooks/use-conversations';
-import { useMessages } from '@/hooks/use-messages';
 import { useChat } from '@ai-sdk/react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Switch } from '@/components/ui/switch';
 import { updateConversation } from '@/app/actions/conversations';
 import { createMessage } from '@/app/actions/messages';
 import type { Message } from '@/db/schema';
@@ -22,7 +18,7 @@ interface Props {
 export default function ChatInterface({ messages: messageData }: Props) {
   const { id } = useParams();
 
-  const { messages, input, handleInputChange, handleSubmit, setInput, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, setInput } = useChat({
     initialMessages: messageData.map(msg => ({
       id: msg.id,
       role: msg.role,
