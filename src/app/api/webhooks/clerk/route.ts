@@ -3,6 +3,7 @@ import { users } from '@/db/schema';
 import type { WebhookEvent } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 
 // This is the Clerk webhook handler that syncs user data with our database
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
 
   // If there are no svix headers, return 400
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Missing svix headers', { status: 400 });
+    return NextResponse.json('Missing svix headers', { status: 400 });
   }
 
 
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    return new Response('Missing webhook secret', { status: 500 });
+    return NextResponse.json('Missing webhook secret', { status: 500 });
   }
 
   // Create a new Svix instance and verify the webhook
@@ -91,10 +92,10 @@ export async function POST(req: Request) {
         });
       }
 
-      return new Response('User synchronized successfully', { status: 200 });
+      return NextResponse.json('User synchronized successfully', { status: 200 });
     } catch (error) {
       console.error('Error syncing user to database:', error);
-      return new Response('Error syncing user to database', { status: 500 });
+      return NextResponse.json('Error syncing user to database', { status: 500 });
     }
   }
 
@@ -104,19 +105,19 @@ export async function POST(req: Request) {
     // Ensure id is not undefined before proceeding
     if (!id) {
       console.error('No user ID provided for deletion');
-      return new Response('No user ID provided', { status: 400 });
+      return NextResponse.json('No user ID provided', { status: 400 });
     }
 
     try {
       // Delete the user from our database
       await db.delete(users).where(eq(users.clerkId, id.toString()));
-      return new Response('User deleted successfully', { status: 200 });
+      return NextResponse.json('User deleted successfully', { status: 200 });
     } catch (error) {
       console.error('Error deleting user from database:', error);
-      return new Response('Error deleting user from database', { status: 500 });
+      return NextResponse.json('Error deleting user from database', { status: 500 });
     }
   }
 
   // Return a 200 response for any other event types
-  return new Response('Webhook received', { status: 200 });
+  return NextResponse.json('Webhook received', { status: 200 });
 }
