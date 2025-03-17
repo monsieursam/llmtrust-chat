@@ -27,7 +27,7 @@ export async function getConversation(id: string) {
   const user = await getCurrentUser();
 
   if (!user) {
-    throw new Error('User not found');
+    return [];
   }
 
   const conversation = await db
