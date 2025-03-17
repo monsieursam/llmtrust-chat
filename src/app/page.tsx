@@ -8,9 +8,6 @@ import { useAuth } from '@clerk/nextjs'
 // This page will create a new conversation and redirect to it
 export default function Home() {
   const router = useRouter()
-  const { userId } = useAuth()
-
-  if (!userId) return null
 
   useEffect(() => {
     // Create a new conversation in the database and redirect to it
