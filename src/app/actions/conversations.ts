@@ -52,7 +52,7 @@ export async function createConversation() {
     .insert(conversations)
     .values({
       title: 'New conversation',
-      userId: '725a10b7-dd29-4837-9ba2-805cd83071cc' || '',
+      userId: '725a10b7-dd29-4837-9ba2-805cd83071cc',
     })
     .returning();
 
