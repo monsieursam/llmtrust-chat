@@ -1,14 +1,14 @@
 'use client'
 
-import { getAnswer } from '@/app/actions/ai';
+import { getAnswer } from '@/actions/ai';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useChat } from '@ai-sdk/react';
 import { useParams } from 'next/navigation';
 import { Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { updateConversation } from '@/app/actions/conversations';
-import { createMessage } from '@/app/actions/messages';
+import { updateConversation } from '@/actions/conversations';
+import { createMessage } from '@/actions/messages';
 import type { Message } from '@/db/schema';
 
 interface Props {

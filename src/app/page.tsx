@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { createConversation } from './actions/conversations'
+import { createConversation } from '../actions/conversations'
 import { useAuth } from '@clerk/nextjs'
 
 // This page will create a new conversation and redirect to it

@@ -1,11 +1,11 @@
 {
-  "id": "409baa82-7965-4ea8-bda9-fff1d0f8d442",
+  "id": "a703ac5c-1cfb-4c7a-af67-f14786c3fbfa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.ai_assistants": {
-      "name": "ai_assistants",
+    "public.ai_models": {
+      "name": "ai_models",
       "schema": "",
       "columns": {
         "id": {
@@ -21,36 +21,23 @@
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avatar_url": {
-          "name": "avatar_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "model_id": {
-          "name": "model_id",
+        "provider": {
+          "name": "provider",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "system_prompt": {
-          "name": "system_prompt",
-          "type": "text",
+        "input_price": {
+          "name": "input_price",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
+        "output_price": {
+          "name": "output_price",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": true
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -92,12 +79,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "ai_assistant_id": {
-          "name": "ai_assistant_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "added_at": {
           "name": "added_at",
           "type": "timestamp",
@@ -122,12 +103,6 @@
               "isExpression": false,
               "asc": true,
               "nulls": "last"
-            },
-            {
-              "expression": "ai_assistant_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
             }
           ],
           "isUnique": true,
@@ -143,19 +118,6 @@
           "tableTo": "conversations",
           "columnsFrom": [
             "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "conversation_participants_ai_assistant_id_ai_assistants_id_fk": {
-          "name": "conversation_participants_ai_assistant_id_ai_assistants_id_fk",
-          "tableFrom": "conversation_participants",
-          "tableTo": "ai_assistants",
-          "columnsFrom": [
-            "ai_assistant_id"
           ],
           "columnsTo": [
             "id"
@@ -273,14 +235,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "ai_assistant_id": {
-          "name": "ai_assistant_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -314,19 +277,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "messages_ai_assistant_id_ai_assistants_id_fk": {
-          "name": "messages_ai_assistant_id_ai_assistants_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "ai_assistants",
-          "columnsFrom": [
-            "ai_assistant_id"
           ],
           "columnsTo": [
             "id"

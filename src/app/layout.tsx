@@ -12,7 +12,7 @@ import './globals.css'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '@/components/ui/sidebar'
 import { QueryProvider } from '@/providers/query-provider'
 import { ConversationList } from '@/components/conversations/conversation-list'
-import { getConversations } from './actions/conversations'
+import { getConversations } from '../actions/conversations'
 import Link from 'next/link'
 import { StarIcon } from 'lucide-react'
 

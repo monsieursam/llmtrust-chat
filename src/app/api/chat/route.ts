@@ -1,4 +1,4 @@
-import { getAnswer } from '@/app/actions/ai';
+import { getAnswer } from '@/actions/ai';
 import { openai } from '@ai-sdk/openai';
 import { streamText, generateText } from 'ai';
 import { NextResponse } from 'next/server';

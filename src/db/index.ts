@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
 
-export const db = drizzle({ client: sql })
+console.log(process.env.POSTGRES_URL);
+export const db = drizzle(process.env.POSTGRES_URL!)
