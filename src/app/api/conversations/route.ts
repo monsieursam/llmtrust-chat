@@ -33,41 +33,42 @@ export async function GET() {
 
 // POST /api/conversations - Create a new conversation
 export async function POST(req: Request) {
-  try {
-    const user = await getCurrentUser();
+  return NextResponse.json({});
+  // try {
+  //   const user = await getCurrentUser();
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  //   if (!user) {
+  //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  //   }
 
-    const body = await req.json();
-    const { title } = body;
+  //   const body = await req.json();
+  //   const { title } = body;
 
-    if (!title) {
-      return NextResponse.json(
-        { error: 'Title is required' },
-        { status: 400 }
-      );
-    }
+  //   if (!title) {
+  //     return NextResponse.json(
+  //       { error: 'Title is required' },
+  //       { status: 400 }
+  //     );
+  //   }
 
-    // Create a new conversation
-    const [newConversation] = await db
-      .insert(conversations)
-      .values({
-        title,
-        userId: user.id,
-        lastMessageAt: new Date(),
-      })
-      .returning();
+  //   // Create a new conversation
+  //   const [newConversation] = await db
+  //     .insert(conversations)
+  //     .values({
+  //       title,
+  //       userId: user.id,
+  //       lastMessageAt: new Date(),
+  //     })
+  //     .returning();
 
-    return NextResponse.json(newConversation);
-  } catch (error) {
-    console.error('Error creating conversation:', error);
-    return NextResponse.json(
-      { error: 'Failed to create conversation' },
-      { status: 500 }
-    );
-  }
+  //   return NextResponse.json(newConversation);
+  // } catch (error) {
+  //   console.error('Error creating conversation:', error);
+  //   return NextResponse.json(
+  //     { error: 'Failed to create conversation' },
+  //     { status: 500 }
+  //   );
+  // }
 }
 
 export async function PATCH(req: Request) {
