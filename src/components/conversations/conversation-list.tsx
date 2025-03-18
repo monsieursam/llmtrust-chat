@@ -3,9 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { Loader, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { createConversation, getConversations } from '@/app/actions/conversations';
+// import { createConversation, getConversations } from '@/app/actions/conversations';
 import type { Conversation } from '@/db/schema';
 import { useFormStatus } from 'react-dom';
+import { useConversations } from '@/hooks/use-conversations';
 
 interface Props {
   conversations: Conversation[];
@@ -31,10 +32,11 @@ export function SubmitButton() {
 
 export function ConversationList({ conversations }: Props) {
   const router = useRouter();
+  const { createConversation } = useConversations();
 
   const handleSubmit = async () => {
-    const conversation = await createConversation();
-    router.push(`/chat/${conversation.id}`)
+    const conversation = await createConversation({ title: 'new conversation' });
+    // router.push(`/chat/${conversation.id}`)
   };
 
   return (

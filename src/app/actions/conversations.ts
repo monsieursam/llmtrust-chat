@@ -40,23 +40,21 @@ export async function getConversation(id: string) {
 }
 
 export async function createConversation() {
-  // const user = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  // if (!user) {
-  //   throw new Error('User not found');
-  // }
-
-  // console.log(user?.id);
+  if (!user) {
+    throw new Error('User not found');
+  }
 
   const [conversation] = await db
     .insert(conversations)
     .values({
       title: 'New conversation',
-      userId: '725a10b7-dd29-4837-9ba2-805cd83071cc',
+      userId: user?.id || '',
     })
     .returning();
 
-  revalidateTag(`725a10b7-dd29-4837-9ba2-805cd83071cc/conversations`);
+  revalidateTag(`${user.id}/conversations`);
 
   return conversation;
 }
