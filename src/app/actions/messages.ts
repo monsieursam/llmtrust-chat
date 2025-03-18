@@ -7,8 +7,6 @@ import { asc, eq } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 
 export async function getMessages(conversationId: string) {
-  const user = await getCurrentUser();
-
   const conversationMessages = await db
     .select()
     .from(messages)
