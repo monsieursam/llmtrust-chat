@@ -28,7 +28,7 @@ export async function createConversation() {
   //   }),
   // });
 
-  // revalidateTag('conversations');
+  revalidateTag('conversations');
 
   return 'response.json()';
 }
