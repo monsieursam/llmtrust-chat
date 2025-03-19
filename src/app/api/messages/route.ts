@@ -1,6 +1,6 @@
 import { db } from '@/db';
 import { messages, conversations } from '@/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from '@clerk/nextjs/server';
 import { and, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
@@ -18,9 +18,9 @@ export async function GET(req: Request) {
     }
 
     // Get the current user
-    const user = await getCurrentUser();
+    const user = await auth();
 
-    if (!user) {
+    if (!user?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
       .where(
         and(
           eq(conversations.id, conversationId),
-          eq(conversations.userId, user.id)
+          eq(conversations.userId, user.userId)
         )
       )
       .limit(1);
@@ -63,9 +63,9 @@ export async function GET(req: Request) {
 // POST /api/messages - Create a new message
 export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser();
+    const user = await auth();
 
-    if (!user) {
+    if (!user?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
       .where(
         and(
           eq(conversations.id, conversationId),
-          eq(conversations.userId, user.id)
+          eq(conversations.userId, user.userId)
         )
       )
       .limit(1);
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
         content,
         conversationId,
         role,
-        userId: user.id,
+        userId: user.userId,
       })
       .returning();
 
