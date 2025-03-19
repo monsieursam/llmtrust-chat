@@ -1,45 +1,32 @@
-import { boolean, integer, pgEnum, pgTable, text, timestamp, uuid, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, integer, pgEnum, pgTable, text, timestamp, uuid, uniqueIndex, decimal, jsonb } from "drizzle-orm/pg-core";
 
 // Define enums
 export const messageRoleEnum = pgEnum('message_role', ['user', 'assistant', 'system', 'data']);
+export const creditTransactionTypeEnum = pgEnum('credit_transaction_type', ['credit', 'debit']);
+export const aiAppStatusEnum = pgEnum('ai_app_status', ['active', 'inactive', 'deleted']);
 
 // Users table
 export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  clerkId: text('clerk_id').notNull().unique(),
+  id: text('id').primaryKey(),
   email: text('email').notNull(),
   name: text('name'),
   avatarUrl: text('avatar_url'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
 });
 
 // Conversations table
 export const conversations = pgTable('conversations', {
   id: uuid('id').defaultRandom().primaryKey(),
   title: text('title').notNull(),
-  userId: uuid('user_id')
+  lastMessageAt: timestamp('last_message_at').defaultNow().notNull(),
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-  lastMessageAt: timestamp('last_message_at').defaultNow().notNull(),
-});
 
-// Conversation participants (for multi-AI conversations)
-export const conversationParticipants = pgTable('conversation_participants', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  conversationId: uuid('conversation_id')
-    .notNull()
-    .references(() => conversations.id, { onDelete: 'cascade' }),
-  addedAt: timestamp('added_at').defaultNow().notNull(),
-  isActive: boolean('is_active').default(true).notNull(),
-}, (table) => {
-  return {
-    uniqParticipant: uniqueIndex('uniq_participant_idx').on(
-      table.conversationId,
-    ),
-  };
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
 });
 
 // Messages table
@@ -50,35 +37,134 @@ export const messages = pgTable('messages', {
     .references(() => conversations.id, { onDelete: 'cascade' }),
   role: messageRoleEnum('role').notNull(),
   content: text('content').notNull(),
-  userId: uuid('user_id')
+  userId: text('user_id')
     .references(() => users.id, { onDelete: 'set null' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-  metadata: text('metadata'),
+  llmId: uuid('llm_id')
+    .references(() => llms.id, { onDelete: 'set null' }),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
 });
 
-// AI Models table
-export const aiModels = pgTable('ai_models', {
-  id: uuid('id').defaultRandom().primaryKey(),
+export const llms = pgTable('llm', {
+  id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
-  provider: text('provider').notNull(),
-  inputPrice: integer('input_price').notNull(),
-  outputPrice: integer('output_price').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  slug: text('slug').notNull(),
+  created_date: text('created'),
+  website: text('website'),
+  description: text('description'),
+  provider: text('provider'),
+  api_access: boolean('api_access'),
+  status: text('status').default('verified'),
+  average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
 });
+
+export const tags = pgTable('tag', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull().unique(),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
+});
+
+export const reviews = pgTable('review', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  rating: decimal('rating', { precision: 3, scale: 2 }),
+  content: jsonb('content'),
+  llmId: uuid('llm_id').references(() => llms.id, { onDelete: 'cascade' }),
+  aiAppId: uuid('ai_app_id').references(() => aiApps.id, { onDelete: 'cascade' }),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
+});
+
+export const apiKeys = pgTable('api_key', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: text('key').notNull(),
+  name: text('name'),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const credits = pgTable('credit', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  amount: decimal('amount', { precision: 10, scale: 2 }),
+  userId: text('userId').references(() => users.id),
+  type: creditTransactionTypeEnum('type').notNull(),
+
+
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const aiApps = pgTable('ai_app', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  description: text('description'),
+  website: text('website'),
+  status: aiAppStatusEnum('status').default('active'),
+  slug: text('slug'),
+  image: text('image'),
+  average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
+
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
+});
+
+export const aiAppsLlms = pgTable('ai_apps_llms', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  aiAppId: uuid('ai_app_id')
+    .notNull()
+    .references(() => aiApps.id, { onDelete: 'cascade' }),
+  llmId: uuid('llm_id')
+    .notNull()
+    .references(() => llms.id, { onDelete: 'cascade' }),
+});
+
+// Create a table to indicate a conversation can have multiple tags
+export const llmsTags = pgTable(
+  'llms_tags',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    llmId: uuid('llm_id')
+      .notNull()
+      .references(() => llms.id, { onDelete: 'cascade' }),
+    tagId: uuid('tag_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
+  },
+);
+
+// Create a table to indicate a conversation can have multiple user
+export const conversationsUsers = pgTable(
+  'conversations_users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    conversationId: uuid('conversation_id')
+      .notNull()
+      .references(() => conversations.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+);
 
 // Export all tables for use in the application
 export const schema = {
   users,
+  llms,
   conversations,
-  conversationParticipants,
   messages,
-  aiModels,
+  reviews,
+  credits,
+  apiKeys,
+
+  conversationsUsers,
+  llmsTags,
 };
 
 export type User = typeof users.$inferSelect;
 export type Conversation = typeof conversations.$inferSelect;
-export type ConversationParticipant = typeof conversationParticipants.$inferSelect;
 export type Message = typeof messages.$inferSelect;
-export type AiModel = typeof aiModels.$inferSelect;
+export type LLM = typeof llms.$inferSelect;

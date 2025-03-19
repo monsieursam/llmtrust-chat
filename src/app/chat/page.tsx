@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { createConversation } from '../actions/conversations'
-import { useAuth } from '@clerk/nextjs'
+import { createConversation } from '@/actions/conversations'
 
 // This page will create a new conversation and redirect to it
 export default function Home() {
@@ -15,13 +14,11 @@ export default function Home() {
       try {
         // Create a new conversation with a temporary title
         // The title will be updated when the user sends their first message
-        const conversation = await createConversation();
+        // const conversation = await createConversation();
         // Redirect to the new conversation
-        router.push(`/chat/${conversation.id}`)
+        // router.push(`/chat/${conversation.id}`)
       } catch (error) {
         console.error('Error creating new conversation:', error)
-        // Handle error (e.g., show toast notification)
-        router.push('/') // Redirect to home on error
       }
     }
 

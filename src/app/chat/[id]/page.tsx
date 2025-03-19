@@ -1,6 +1,6 @@
 
 import { getMessages } from '@/actions/messages';
-import ChatInterface from '@/components/client/chat-interface';
+import ChatInterface from './_components/chat-interface';
 
 type Params = Promise<{ id: string }>;
 

@@ -1,16 +1,18 @@
+'use server'
+
 import { db } from '@/db';
 import { conversations } from '@/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { eq, desc } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 // GET /api/conversations - Get all conversations for the current user
-export async function GET() {
+export async function GET(req: Request) {
   try {
     // Get the current user
-    const user = await getCurrentUser();
+    const user = await auth();
 
-    if (!user) {
+    if (!user?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -18,14 +20,14 @@ export async function GET() {
     const userConversations = await db
       .select()
       .from(conversations)
-      .where(eq(conversations.userId, user.id))
+      .where(eq(conversations.userId, user.userId))
       .orderBy(desc(conversations.lastMessageAt));
 
     return NextResponse.json(userConversations);
   } catch (error) {
     console.error('Error fetching conversations:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch conversations' },
+      { error },
       { status: 500 }
     );
   }
@@ -34,9 +36,9 @@ export async function GET() {
 // POST /api/conversations - Create a new conversation
 export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser();
+    const { userId } = await auth();
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -54,7 +56,7 @@ export async function POST(req: Request) {
       .insert(conversations)
       .values({
         title,
-        userId: user.id,
+        userId: userId,
         lastMessageAt: new Date(),
       })
       .returning();
@@ -71,9 +73,9 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    const user = await getCurrentUser();
+    const { userId } = await auth();
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

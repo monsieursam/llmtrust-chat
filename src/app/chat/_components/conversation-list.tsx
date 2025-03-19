@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import type { Conversation } from '@/db/schema';
 import { useFormStatus } from 'react-dom';
 import { useConversations } from '@/hooks/use-conversations';
+import { createConversation } from '@/actions/conversations';
+import { use } from 'react';
 
 interface Props {
   conversations: Conversation[];
@@ -30,12 +32,16 @@ export function SubmitButton() {
   )
 }
 
-export function ConversationList({ conversations }: Props) {
+export function ConversationList({
+  conversations,
+}: {
+  conversations: Promise<Conversation[]>
+}) {
+  const allConversations = use(conversations)
   const router = useRouter();
-  const { createConversation } = useConversations();
 
   const handleSubmit = async () => {
-    const conversation = await createConversation({ title: 'new conversation' });
+    const conversation = await createConversation();
     // router.push(`/chat/${conversation.id}`)
   };
 
@@ -49,7 +55,7 @@ export function ConversationList({ conversations }: Props) {
 
       <div className="flex-1 overflow-auto p-2">
         <ul className="space-y-2">
-          {conversations.map((conversation) => (
+          {allConversations?.map((conversation) => (
             <li key={conversation.id}>
               <Button
                 variant="ghost"

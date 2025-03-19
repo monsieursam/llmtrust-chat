@@ -2,7 +2,7 @@
 
 import { db } from '@/db';
 import { conversations, messages } from '@/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { currentUser } from '@clerk/nextjs/server';
 import { asc, eq } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 
@@ -17,7 +17,7 @@ export async function getMessages(conversationId: string) {
 }
 
 export async function getMessage(id: string) {
-  const user = await getCurrentUser();
+  const user = await currentUser();
 
   const message = await db
     .select()
@@ -38,7 +38,7 @@ export async function createMessage({
   conversationId: string;
   aiAssistantId?: string;
 }) {
-  const user = await getCurrentUser();
+  const user = await currentUser();
 
   if (!user) {
     throw new Error('User not found');
@@ -69,7 +69,7 @@ export async function createMessage({
 }
 
 export async function updateMessage(id: string, content: string) {
-  const user = await getCurrentUser();
+  const user = await currentUser();
 
   const [message] = await db
     .update(messages)
@@ -84,7 +84,7 @@ export async function updateMessage(id: string, content: string) {
 }
 
 export async function deleteMessage(id: string) {
-  const user = await getCurrentUser();
+  const user = await currentUser();
 
   await db
     .delete(messages)

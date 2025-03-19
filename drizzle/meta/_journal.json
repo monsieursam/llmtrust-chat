@@ -8,6 +8,55 @@
       "when": 1742308090973,
       "tag": "0000_young_sharon_carter",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742340026114,
+      "tag": "0001_opposite_malcolm_colcord",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742340092485,
+      "tag": "0002_yellow_tag",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1742340273243,
+      "tag": "0003_cultured_loners",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1742340520809,
+      "tag": "0004_romantic_vampiro",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1742340566387,
+      "tag": "0005_organic_christian_walker",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1742341316423,
+      "tag": "0006_volatile_shadow_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1742387295285,
+      "tag": "0007_numerous_agent_zero",
+      "breakpoints": true
     }
   ]
 }
