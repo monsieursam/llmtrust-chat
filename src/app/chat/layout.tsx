@@ -29,12 +29,14 @@ export default async function RootLayout({
         <body
           className={'antialiased min-h-screen flex flex-col'}
         >
-          <SidebarProvider>
-            <ChatSidebar />
-            <div className='w-full'>
-              {children}
-            </div>
-          </SidebarProvider>
+          <QueryProvider>
+            <SidebarProvider>
+              <ChatSidebar />
+              <div className='w-full'>
+                {children}
+              </div>
+            </SidebarProvider>
+          </QueryProvider>
         </body>
       </html>
     </ClerkProvider>

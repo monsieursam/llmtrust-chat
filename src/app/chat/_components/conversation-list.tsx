@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import type { Conversation } from '@/db/schema';
 import { useFormStatus } from 'react-dom';
 import { useConversations } from '@/hooks/use-conversations';
-import { createConversation } from '@/actions/conversations';
+// import { createConversation } from '@/actions/conversations';
 import { use } from 'react';
 
 interface Props {
@@ -39,9 +39,10 @@ export function ConversationList({
 }) {
   const allConversations = use(conversations)
   const router = useRouter();
+  const { createConversation } = useConversations();
 
   const handleSubmit = async () => {
-    const conversation = await createConversation();
+    const conversation = await createConversation({ title: 'New Conversation' });
     // router.push(`/chat/${conversation.id}`)
   };
 

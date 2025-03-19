@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Conversation } from '@/db/schema';
+import { useAuth } from '@clerk/nextjs';
 
 interface CreateConversationData {
   title: string;
@@ -22,11 +23,13 @@ const fetchConversations = async (): Promise<Conversation[]> => {
 };
 
 // Function to create a new conversation
-const createConversation = async (data: CreateConversationData): Promise<Conversation> => {
+const createConversation = async (data: CreateConversationData, user: any): Promise<Conversation> => {
+  const token = await user.getToken();
   const response = await fetch('/api/conversations', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });
@@ -56,6 +59,7 @@ const updateConversation = async (data: UpdateConversationData): Promise<Convers
 
 export function useConversations() {
   const queryClient = useQueryClient();
+  const user = useAuth()
 
   // Query for fetching all conversations
   const query = useQuery({
@@ -65,7 +69,7 @@ export function useConversations() {
 
   // Mutation for creating a new conversation
   const createMutation = useMutation({
-    mutationFn: createConversation,
+    mutationFn: () => createConversation({ title: 'New Conversation' }, user),
     onSuccess: (newConversation) => {
       // Optimistically update the conversations list
       queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
