@@ -35,9 +35,8 @@ export function SubmitButton() {
 export function ConversationList({
   conversations,
 }: {
-  conversations: Promise<Conversation[]>
+  conversations: Conversation[]
 }) {
-  const allConversations = use(conversations)
   const router = useRouter();
   const { createConversation } = useConversations();
 
@@ -57,7 +56,7 @@ export function ConversationList({
 
       <div className="flex-1 overflow-auto p-2">
         <ul className="space-y-2">
-          {allConversations?.map((conversation) => (
+          {conversations?.map((conversation) => (
             <li key={conversation.id}>
               <Button
                 variant="ghost"

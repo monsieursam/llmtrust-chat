@@ -1,31 +1,15 @@
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
-import type { Metadata } from 'next'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '@/components/ui/sidebar'
-import { QueryProvider } from '@/providers/query-provider'
+'use client'
+
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { ConversationList } from '@/app/chat/_components/conversation-list'
-import { getConversations } from '@/actions/conversations'
 import Link from 'next/link'
 import { StarIcon } from 'lucide-react'
-import fetchApi from '@/lib/fetch'
 import { useConversations } from '@/hooks/use-conversations'
 import { Suspense } from 'react'
 import { NavUser } from '@/components/nav-user'
-import { auth, currentUser } from '@clerk/nextjs/server'
 
-export default async function ChatSidebar() {
-  const user = await currentUser();
-
-  if (!user) {
-    return <div>Please sign in to view your conversations</div>;
-  }
-  const conversations = getConversations()
+export default function ChatSidebar() {
+  const { conversations } = useConversations();
 
   return (
     <Sidebar>
