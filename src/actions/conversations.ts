@@ -11,7 +11,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function getConversations() {
-  const response = await fetchApi('/api/conversations', { next: { tags: ['conversations'] } });
+  const response = await fetchApi('/api/conversations');
 
   return response.json();
 }
@@ -28,7 +28,7 @@ export async function createConversation() {
   //   }),
   // });
 
-  revalidateTag('conversations');
+  // revalidatePath('/api/conversations');
 
   return 'response.json()';
 }
