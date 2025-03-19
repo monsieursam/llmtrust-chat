@@ -43,6 +43,7 @@ export function ConversationList({
 
   const handleSubmit = async () => {
     const conversation = await createConversation({ title: 'New Conversation' });
+
     // router.push(`/chat/${conversation.id}`)
   };
 

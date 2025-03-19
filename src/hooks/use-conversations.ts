@@ -57,6 +57,10 @@ const updateConversation = async (data: UpdateConversationData): Promise<Convers
   return response.json();
 };
 
+interface CreateConversationProps {
+  title: string;
+}
+
 export function useConversations() {
   const queryClient = useQueryClient();
   const user = useAuth()
@@ -69,7 +73,7 @@ export function useConversations() {
 
   // Mutation for creating a new conversation
   const createMutation = useMutation({
-    mutationFn: () => createConversation({ title: 'New Conversation' }, user),
+    mutationFn: ({ title }: CreateConversationProps) => createConversation({ title }, user),
     onSuccess: (newConversation) => {
       // Optimistically update the conversations list
       queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
