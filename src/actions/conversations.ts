@@ -21,16 +21,16 @@ export async function getConversation(id: string) {
 }
 
 export async function createConversation() {
-  const response = await fetchApi('/api/conversations', {
-    method: 'POST',
-    body: JSON.stringify({
-      title: 'New Conversation',
-    }),
-  });
+  // const response = await fetchApi('/api/conversations', {
+  //   method: 'POST',
+  //   body: JSON.stringify({
+  //     title: 'New Conversation',
+  //   }),
+  // });
 
-  revalidateTag('conversations');
+  // revalidateTag('conversations');
 
-  return response.json();
+  return 'response.json()';
 }
 
 export async function updateConversation(id: string, title: string) {

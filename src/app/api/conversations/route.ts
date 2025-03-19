@@ -36,32 +36,33 @@ export async function GET(req: Request) {
 // POST /api/conversations - Create a new conversation
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
+    // const { userId } = await auth();
 
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // if (!userId) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
 
-    const { title } = await req.json();
+    // const { title } = await req.json();
 
-    if (!title) {
-      return NextResponse.json(
-        { error: 'Title is required' },
-        { status: 400 }
-      );
-    }
+    // if (!title) {
+    //   return NextResponse.json(
+    //     { error: 'Title is required' },
+    //     { status: 400 }
+    //   );
+    // }
 
     // Create a new conversation
-    const [newConversation] = await db
-      .insert(conversations)
-      .values({
-        title,
-        userId: userId,
-        lastMessageAt: new Date(),
-      })
-      .returning();
+    // const [newConversation] = await db
+    //   .insert(conversations)
+    //   .values({
+    //     title,
+    //     userId: userId,
+    //     lastMessageAt: new Date(),
+    //   })
+    //   .returning();
 
-    return NextResponse.json(newConversation);
+    // return NextResponse.json(newConversation);
+    return NextResponse.json({ message: 'Conversation created' });
   } catch (error) {
     console.error('Error creating conversation:', error);
     return NextResponse.json(
