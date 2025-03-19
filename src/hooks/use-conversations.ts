@@ -109,6 +109,7 @@ export function useConversations() {
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
+    createConversationData: createMutation.data,
     createConversation: createMutation.mutate,
     updateConversation: updateMutation.mutate,
     isUpdating: updateMutation.isPending,
