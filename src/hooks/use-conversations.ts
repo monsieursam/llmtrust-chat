@@ -79,9 +79,9 @@ export function useConversations() {
     mutationFn: ({ title }: CreateConversationProps) => createConversation({ title }, user),
     onSuccess: (newConversation) => {
       // Optimistically update the conversations list
-      queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
-        return oldData ? [newConversation, ...oldData] : [newConversation];
-      });
+      // queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
+      //   return oldData ? [newConversation, ...oldData] : [newConversation];
+      // });
 
       // Invalidate the conversations query to refetch
       queryClient.invalidateQueries({ queryKey: ['conversations'] });

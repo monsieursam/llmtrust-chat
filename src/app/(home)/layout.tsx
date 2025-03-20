@@ -70,7 +70,7 @@ export default function RootLayout({
               <AppSidebar />
               <SidebarInset>
                 <Header />
-                <main className="flex flex-1 max-w-100">
+                <main className="flex flex-1">
                   {children}
                 </main>
                 <Toaster />

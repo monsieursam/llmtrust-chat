@@ -4,6 +4,7 @@ import fetchApi from "@/lib/fetch";
 import { StarIcon, ShieldCheckIcon, TrendingUpIcon, MessageSquareIcon, BrainCircuitIcon, SearchIcon, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { LatestModelShowcase } from "./_components/latest-model-showcase";
+import { fetchLatestModels } from "@/actions/models";
 // import Link from "next/link";
 // import { HeroSearch } from "@/components/client/hero-search";
 // import QuickStart from "@/components/client/quick-start";
@@ -11,8 +12,7 @@ import { LatestModelShowcase } from "./_components/latest-model-showcase";
 // import { LatestModelShowcase } from "@/components/servers/latest-model-showcase";
 
 export default async function Home() {
-  const data = await fetchApi('/api/models/latest');
-  const latestModels = await data.json();
+  const latestModels = await fetchLatestModels();
 
   return (
     <div className="min-h-screen flex-1">

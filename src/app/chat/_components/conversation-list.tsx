@@ -8,7 +8,7 @@ import type { Conversation } from '@/db/schema';
 import { useFormStatus } from 'react-dom';
 import { useConversations } from '@/hooks/use-conversations';
 // import { createConversation } from '@/actions/conversations';
-import { use } from 'react';
+import { use, useEffect } from 'react';
 
 interface Props {
   conversations: Conversation[];
@@ -38,13 +38,19 @@ export function ConversationList({
   conversations: Conversation[]
 }) {
   const router = useRouter();
-  const { createConversation } = useConversations();
+  const { createConversation, createConversationData } = useConversations();
 
   const handleSubmit = async () => {
     const conversation = await createConversation({ title: 'New Conversation' });
 
     // router.push(`/chat/${conversation.id}`)
   };
+
+  useEffect(() => {
+    if (createConversationData) {
+      router.push(`/chat/${createConversationData.id}`)
+    }
+  }, [createConversationData, router])
 
   return (
     <div className="flex flex-col h-full">

@@ -1,8 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { use, useEffect } from 'react'
-import { createConversation } from '@/actions/conversations'
+import { useEffect } from 'react'
+
 import { useConversations } from '@/hooks/use-conversations'
 
 // This page will create a new conversation and redirect to it
@@ -11,7 +11,6 @@ export default function Home() {
   const { createConversation, createConversationData } = useConversations()
 
   useEffect(() => {
-    // Create a new conversation in the database and redirect to it
     const createNewConversation = async () => {
       try {
         await createConversation({ title: 'new conversation' });
@@ -28,7 +27,7 @@ export default function Home() {
     if (createConversationData) {
       router.push(`/chat/${createConversationData.id}`)
     }
-  }, [createConversationData])
+  }, [createConversationData, router])
 
   return (
     <div className="flex items-center justify-center h-screen">

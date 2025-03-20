@@ -45,7 +45,7 @@ export function AppSidebar() {
 
 
   return (
-    <Sidebar variant="floating">
+    <Sidebar variant="inset">
       <SidebarHeader className="">
         <SidebarMenu>
           <SidebarMenuItem>
