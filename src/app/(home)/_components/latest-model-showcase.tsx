@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Terminal, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -10,11 +9,12 @@ interface LatestModelShowcaseProps {
 }
 
 export function LatestModelShowcase({ latestModels }: LatestModelShowcaseProps) {
+  console.log(latestModels);
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-2xl font-bold text-center mb-6">Latest Models</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {latestModels.slice(0, 3).map((model) => (
+        {latestModels?.slice(0, 3).map((model) => (
           <Link href={`/models/${model.slug}`} key={model.id} className="block">
             <Card className="border h-full">
               <div className="p-4 flex flex-col h-full">

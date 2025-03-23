@@ -1,4 +1,4 @@
-import { boolean, integer, pgEnum, pgTable, text, timestamp, uuid, uniqueIndex, decimal, jsonb } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp, uuid, decimal, jsonb } from "drizzle-orm/pg-core";
 
 // Define enums
 export const messageRoleEnum = pgEnum('message_role', ['user', 'assistant', 'system', 'data']);
@@ -56,6 +56,9 @@ export const llms = pgTable('llm', {
   api_access: boolean('api_access'),
   status: text('status').default('verified'),
   average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
+  pricing_input: decimal('pricing_input', { precision: 10, scale: 2 }),
+  pricing_output: decimal('pricing_output', { precision: 10, scale: 2 }),
+
   createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
   updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
 });
@@ -159,7 +162,10 @@ export const schema = {
   reviews,
   credits,
   apiKeys,
+  tags,
+  aiApps,
 
+  aiAppsLlms,
   conversationsUsers,
   llmsTags,
 };
@@ -168,3 +174,6 @@ export type User = typeof users.$inferSelect;
 export type Conversation = typeof conversations.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type LLM = typeof llms.$inferSelect;
+export type Tag = typeof tags.$inferSelect;
+export type AiApp = typeof aiApps.$inferSelect;
+export type Review = typeof reviews.$inferSelect;
