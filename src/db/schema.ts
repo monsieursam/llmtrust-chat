@@ -1,4 +1,4 @@
-import { boolean, pgEnum, pgTable, text, timestamp, uuid, decimal, jsonb } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp, uuid, decimal, jsonb, numeric, integer } from "drizzle-orm/pg-core";
 
 // Define enums
 export const messageRoleEnum = pgEnum('message_role', ['user', 'assistant', 'system', 'data']);
@@ -72,7 +72,7 @@ export const tags = pgTable('tag', {
 
 export const reviews = pgTable('review', {
   id: uuid('id').primaryKey().defaultRandom(),
-  rating: decimal('rating', { precision: 3, scale: 2 }),
+  rating: integer('rating'),
   content: jsonb('content'),
   llmId: uuid('llm_id').references(() => llms.id, { onDelete: 'cascade' }),
   aiAppId: uuid('ai_app_id').references(() => aiApps.id, { onDelete: 'cascade' }),

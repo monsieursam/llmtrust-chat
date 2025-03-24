@@ -13,6 +13,7 @@ import { fetchAllReviews, fetchReviewsStatsByTypeById, ReviewType } from "@/acti
 import Script from "next/script";
 import type { Metadata } from 'next';
 import { fetchOneLLM } from "@/actions/models";
+import ModelInterface from "../_components/models-interface";
 
 export const revalidate = 3600;
 
@@ -90,7 +91,7 @@ export default async function ModelPage({
         })}
       </Script>
 
-      {/* <ModelInterface llm={llm} reviews={reviews} reviewStats={reviewStats} /> */}
+      <ModelInterface llm={llm} reviews={reviews} reviewStats={reviewStats} />
     </>
   );
 }

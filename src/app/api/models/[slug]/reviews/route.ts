@@ -1,24 +1,35 @@
 import { createReview, fetchAllReviews, ReviewType } from "@/actions/reviews";
 import { db } from "@/db";
-import { reviews } from "@/db/schema";
+import { reviews, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
-type Params = Promise<{ id: string }>;
+type Params = Promise<{ slug: string }>;
 
 export async function GET(req: NextRequest,
   { params }: { params: Params }
 ) {
   try {
-    const { id } = await params;
-    const reviewsWithUsers = await db.query.reviews.findMany({
-      where: eq(reviews.llmId, id),
-      with: {
-        user: true
-      }
-    });
+    const { slug } = await params;
+    console.log(slug);
+    const llmReviews = await db
+      .select({
+        id: reviews.id,
+        rating: reviews.rating,
+        content: reviews.content,
+        createdAt: reviews.createdAt,
+        user: {
+          id: users.id,
+          name: users.name, // Adjust based on your actual user schema
+          // Add other user fields you want to include
+        }
+      })
+      .from(reviews)
+      .leftJoin(users, eq(reviews.userId, users.id))
+      .where(eq(reviews.llmId, slug))
+      .orderBy(reviews.createdAt)
 
-    return NextResponse.json(reviewsWithUsers, { status: 200 });
+    return NextResponse.json(llmReviews, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error },
@@ -32,13 +43,13 @@ export async function POST(req: NextRequest,
 ) {
   try {
     const reviewData = await req.json();
-    const { id } = await params;
+    const { slug } = await params;
 
     const [newReview] = await db.insert(reviews)
       .values({
         rating: reviewData.rating,
         content: reviewData.content,
-        llmId: id,
+        llmId: slug,
         userId: reviewData.userId,
       })
       .returning();
