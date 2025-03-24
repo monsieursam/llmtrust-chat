@@ -1,4 +1,7 @@
+'use client';
+
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -9,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import TagsModelForm from './tags-model-form';
 import type { LLM } from '@/db/schema';
 import { createLLM, updateLLM } from '@/actions/models';
+import { useActionState, useState } from 'react';
 
 
 interface ModelFormProps {
@@ -18,7 +22,9 @@ interface ModelFormProps {
 
 type ModelFormValues = Partial<LLM>;
 
-export function ModelForm({ initialData, onSuccess }: ModelFormProps) {
+export function ModelForm({ initialData }: ModelFormProps) {
+  const router = useRouter();
+  console.log(initialData);
   const form = useForm<ModelFormValues>({
     defaultValues: {
       ...initialData,
@@ -33,7 +39,8 @@ export function ModelForm({ initialData, onSuccess }: ModelFormProps) {
       } else {
         await createLLM(data);
       }
-      onSuccess?.();
+      // Navigate back to models list after successful submission
+      router.push('/admin/models');
     } catch (error) {
       console.error('Error saving model:', error);
     }

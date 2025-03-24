@@ -1,10 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AIAppTable } from "./ai-app-table"
-import { ModelTable } from "./model-table"
-import { fetchAllLLM } from "@/actions/models";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export default async function AdminClient() {
-  const models = await fetchAllLLM();
 
   return (
     <div>
@@ -17,7 +17,15 @@ export default async function AdminClient() {
         </TabsList>
 
         <TabsContent value="models">
-          <ModelTable models={models} />
+          <Card className="p-6 my-2">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">LLM Models</h2>
+              <Button asChild>
+                <Link href="/admin/models">Manage Models</Link>
+              </Button>
+            </div>
+            <p className="text-muted-foreground">Manage your LLM models, add new models, or edit existing ones.</p>
+          </Card>
         </TabsContent>
         <TabsContent value="aiapps">
           {/* <AIAppTable /> */}

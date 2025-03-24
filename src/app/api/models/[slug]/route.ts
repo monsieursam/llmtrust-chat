@@ -10,10 +10,9 @@ type Params = Promise<{ slug: string }>;
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     const { slug } = await params;
-    const data = await db
-      .select()
-      .from(llms)
-      .where(eq(llms.slug, slug))
+    const data = await db.query.llms.findFirst({
+      where: (llms, { eq }) => eq(llms.slug, slug)
+    });
 
     return NextResponse.json(data);
   } catch (error) {

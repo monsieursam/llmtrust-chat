@@ -1,14 +1,15 @@
 'use server'
 
-import type { AiApp, LLM } from "@/db/schema";
+import { tags, type AiApp, type LLM } from "@/db/schema";
 import fetchApi from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 export interface LLMWithAiApps extends LLM {
   aiApps: AiApp[];
 }
 
 export async function fetchAllLLM() {
-  const response = await fetchApi('/api/models');
+  const response = await fetchApi('/api/models', { next: { tags: ['models'] } });
   const data = await response.json();
 
   return data as LLM[];
@@ -59,6 +60,8 @@ export async function createLLM(body: Partial<LLM>) {
   const response = await fetchApi('/api/models', { body: JSON.stringify(body), method: "POST" });
   const data = await response.json();
 
+  revalidateTag('models')
+
   return data as LLM;
 }
 
@@ -67,6 +70,8 @@ export async function updateLLM({ slug, data }: { slug: string, data: Partial<LL
     body: JSON.stringify(data),
     method: "PUT"
   });
+
+  revalidateTag('models')
 
   const newData = await response.json();
 
