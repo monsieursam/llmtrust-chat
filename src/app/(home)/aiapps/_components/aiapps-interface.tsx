@@ -50,7 +50,7 @@ export default function AiAppInterface({ app, reviewStats, reviews }: Props) {
                       ))}
                     </div>
                     <span className="text-lg font-semibold">{app.average_rating}</span>
-                    <span className="text-gray-500">({app.reviews.length} reviews)</span>
+                    <span className="text-gray-500">({reviews.length} reviews)</span>
                   </div>
                   {app.llms.map((llm) => (
                     <Link href={`/models/${llm?.slug}`} key={llm.id} >
