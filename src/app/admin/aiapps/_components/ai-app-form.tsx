@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AiApp, LLM } from '@/db/schema';
 import { createAIApp, updateAIApp } from '@/actions/aiapps';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   llms: LLM[];
@@ -29,6 +30,7 @@ export function AIAppForm({ initialData, llms, onSuccess }: Props) {
       ...initialData,
     }
   });
+  const router = useRouter();
 
   const onSubmit = async (data: AIAppFormValues) => {
     try {
@@ -37,7 +39,7 @@ export function AIAppForm({ initialData, llms, onSuccess }: Props) {
       } else {
         await createAIApp(data);
       }
-      onSuccess?.();
+      router.push('/admin/aiapps');
     } catch (error) {
       console.error('Error managing AI app:', error);
     }

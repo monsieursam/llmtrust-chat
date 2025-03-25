@@ -1,3 +1,5 @@
+'use client';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { Button } from '@/components/ui/button';
@@ -23,7 +25,7 @@ export async function AIAppList({ aiapps }: Props) {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">AI Applications</h2>
         <Button>
-          <Link href={'/admin/models/new'}>New</Link>
+          <Link href={'/admin/aiapps/new'}>New</Link>
         </Button>
       </div>
       <Table>
