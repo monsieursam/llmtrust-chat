@@ -1,3 +1,5 @@
+'use server'
+
 import type { AiAppWithLLM } from '@/app/api/aiapps/route';
 import type { AiApp, Review } from '@/db/schema';
 import fetchApi from '@/lib/fetch';
