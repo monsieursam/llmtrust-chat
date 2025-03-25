@@ -78,7 +78,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
     >
       <ContextMenuTrigger
         asChild
-        onContextMenu={(event) => {
+        onContextMenu={(event: any) => {
           const dataset = (event.target as HTMLElement).dataset;
 
           const disabled = dataset?.slateEditor === 'true';
@@ -95,7 +95,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
       </ContextMenuTrigger>
       <ContextMenuContent
         className="w-64"
-        onCloseAutoFocus={(e) => {
+        onCloseAutoFocus={(e: any) => {
           e.preventDefault();
           editor.getApi(BlockSelectionPlugin).blockSelection.focus();
 
