@@ -8,12 +8,13 @@ import { Badge } from "@/components/ui/badge";
 
 import Image from "next/image";
 
-import { fetchAllReviews, fetchReviewsStatsByTypeById, ReviewType } from "@/actions/reviews";
+import { fetchAllReviews, fetchReviewsStatsByTypeById } from "@/actions/reviews";
 // import ModelInterface from "@/components/client/models-interface";
 import Script from "next/script";
 import type { Metadata } from 'next';
 import { fetchOneLLM } from "@/actions/models";
 import ModelInterface from "../_components/models-interface";
+import { ReviewType } from "@/app/api/reviews/types";
 
 export const revalidate = 3600;
 
@@ -84,7 +85,7 @@ export default async function ModelPage({
             },
             "author": {
               "@type": "Person",
-              "name": `${review.user.first_name} ${review.user.last_name}`
+              "name": `${review?.user?.first_name} ${review?.user?.last_name}`
             },
             "datePublished": review.createdAt
           }))

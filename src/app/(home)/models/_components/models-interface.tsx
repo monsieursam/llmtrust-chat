@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Star, Copy, Check, CalendarIcon, Terminal } from "lucide-react";
 // import AllReviews from "./all-reviews";
-import { ReviewType, type ReviewWithUser } from "@/actions/reviews";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 // import { ReviewForm } from "./review-form";
@@ -20,6 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LLMWithAiApps } from "@/app/api/models/route";
+import type { ReviewWithUser } from "@/app/api/reviews/types";
 
 interface Props {
   llm: LLMWithAiApps;
