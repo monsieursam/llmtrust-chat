@@ -66,7 +66,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
 
   return (
     <ContextMenu
-      onOpenChange={(open) => {
+      onOpenChange={(open: any) => {
         if (!open) {
           // prevent unselect the block selection
           setTimeout(() => {
