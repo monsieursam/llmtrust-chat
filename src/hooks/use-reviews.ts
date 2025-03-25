@@ -1,4 +1,4 @@
-import type { ReviewType } from '@/actions/reviews';
+import type { ReviewType } from '@/app/api/reviews/types';
 import type { Review } from '@/db/schema';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';

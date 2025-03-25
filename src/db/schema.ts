@@ -13,7 +13,7 @@ export const users = pgTable('users', {
   name: text('name'),
   first_name: text('first_name'),
   last_name: text('last_name'),
-  avatarUrl: text('avatar_url'),
+  image_url: text('image_url'),
 
   createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
   updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),

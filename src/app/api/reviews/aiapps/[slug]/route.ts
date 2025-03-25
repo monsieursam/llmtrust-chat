@@ -3,11 +3,11 @@ import { reviews, users, type Review } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import type { ReviewWithUser } from "../../types";
-import type { ApiSlugParams } from "@/app/api/types";
 
+type Params = Promise<{ slug: string }>;
 
 export async function GET(req: NextRequest,
-  { params }: { params: ApiSlugParams }
+  { params }: { params: Params }
 ) {
   try {
     const { slug } = await params;
@@ -23,12 +23,11 @@ export async function GET(req: NextRequest,
           image_url: users.image_url,
           first_name: users.first_name,
           last_name: users.last_name,
-          // Add other user fields you want to include
         }
       })
       .from(reviews)
       .leftJoin(users, eq(reviews.userId, users.id))
-      .where(eq(reviews.llmId, slug))
+      .where(eq(reviews.aiAppId, slug))
       .orderBy(reviews.createdAt)
 
     return NextResponse.json(llmReviews, { status: 200 });
@@ -41,7 +40,7 @@ export async function GET(req: NextRequest,
 }
 
 export async function POST(req: NextRequest,
-  { params }: { params: ApiSlugParams }
+  { params }: { params: Params }
 ) {
   try {
     const reviewData = await req.json();
@@ -51,11 +50,10 @@ export async function POST(req: NextRequest,
       .values({
         rating: reviewData.rating,
         content: reviewData.content,
-        llmId: slug,
+        aiAppId: slug,
         userId: reviewData.userId,
       })
       .returning();
-
 
     return NextResponse.json(newReview, { status: 201 });
   } catch (error) {

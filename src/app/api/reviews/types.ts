@@ -1,11 +1,10 @@
-import type { Review } from "@/db/schema";
+import type { Review, User } from "@/db/schema";
 
+export type ReviewWithUser = Partial<Review> & {
+  user: Partial<User> | null
+}
 
-export interface ReviewWithUser extends Partial<Review> {
-  user: {
-    id: string;
-    first_name: string | null;
-    last_name: string | null;
-    avatarUrl: string | null;
-  } | null;
+export enum ReviewType {
+  AIAPP = "aiapps",
+  MODEL = "models",
 }

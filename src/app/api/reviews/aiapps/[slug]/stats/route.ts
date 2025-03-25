@@ -4,17 +4,18 @@ import { db } from "@/db";
 import { reviews } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import type { ApiSlugParams } from "@/app/api/types";
+
+type Params = Promise<{ slug: string }>;
 
 export async function GET(req: NextRequest,
-  { params }: { params: ApiSlugParams }
+  { params }: { params: Params }
 ) {
   try {
     const { slug } = await params;
     const reviewsData = await db
       .select()
       .from(reviews)
-      .where(eq(reviews.llmId, slug));
+      .where(eq(reviews.aiAppId, slug));
 
     // Initialize stats object with 0 counts for ratings 1-5
     const stats = {

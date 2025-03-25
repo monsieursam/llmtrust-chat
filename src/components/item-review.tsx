@@ -7,10 +7,9 @@ import { useCreateEditor } from "@/components/editor/use-create-editor";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import type { ReviewType, ReviewWithUser } from "@/actions/reviews";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import type { Review } from "@/db/schema";
+import type { ReviewType, ReviewWithUser } from "@/app/api/reviews/types";
 
 interface Props {
   review: ReviewWithUser;
@@ -36,34 +35,36 @@ export default function ItemReview({ review, id, type }: Props) {
     <div key={review.id} className="border-b py-4">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          {review.customer.image_url &&
+          {review?.user?.image_url &&
             (
               <Image
-                src={review.customer.image_url}
-                alt={`User ${review.customer.first_name} ${review.customer.last_name}`}
+                src={review.user.image_url}
+                alt={`User ${review.user.first_name} ${review.user.last_name}`}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
             )}
           <div>
-            <p className="font-semibold">{review.customer.first_name} {review.customer.last_name}</p>
-            <p className="text-sm text-gray-500">{new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p className="font-semibold">{review?.user?.first_name} {review?.user?.last_name}</p>
+            <p className="text-sm text-gray-500">{new Date(review.createdAt || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             <div className="flex">
               {[...Array(5)].map((_, j) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                <Star key={j} className={`w-4 h-4 ${j < review.rating ? "fill-yellow-400" : "fill-gray-300"}`} />
+                <Star key={j} className={`w-4 h-4 ${j < (review.rating ?? 0) ? "fill-yellow-400" : "fill-gray-300"}`} />
               ))}
             </div>
           </div>
         </div>
-        {user?.id === review.customer.id && (
+        {user?.id === review?.user?.id && (
           <Button variant="ghost" size="icon" onClick={handleDelete} className="text-red-500 hover:text-red-700">
             <Trash2 className="h-4 w-4" />
           </Button>
         )}
       </div>
-      {review.content && <PlateEditor editor={editor} readOnly variant='review' />}
+      {!!review?.content &&
+        <PlateEditor editor={editor} readOnly variant='review' />
+      }
     </div>
   )
 }

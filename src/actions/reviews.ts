@@ -1,12 +1,7 @@
-import type { ReviewWithUser } from "@/app/api/reviews/types";
+import type { ReviewType, ReviewWithUser } from "@/app/api/reviews/types";
 import type { Review } from "@/db/schema";
 import fetchApi from "@/lib/fetch";
 import { revalidateTag } from "next/cache";
-
-export enum ReviewType {
-  AIAPP = "aiapps",
-  MODEL = "models",
-}
 
 export async function createReview({ id, type, body }: {
   id: string, type: ReviewType, body: Review
@@ -14,7 +9,7 @@ export async function createReview({ id, type, body }: {
   const response = await fetchApi(`/api/reviews/${type}/${id}`, { body: JSON.stringify(body), method: 'POST' });
   const data = await response.json();
 
-  revalidateTag(`reviews:${type}:${id}`);
+  revalidateTag(`reviews/${type}/${id}`);
 
   return data as Review;
 }
@@ -22,7 +17,7 @@ export async function createReview({ id, type, body }: {
 export async function fetchAllReviews({ id, type }: { id: string, type: ReviewType }) {
   const response = await fetchApi(`/api/reviews/${type}/${id}`, {
     next: {
-      tags: [`reviews:${type}:${id}`]
+      tags: [`reviews/${type}/${id}`]
     }
   }
   );
