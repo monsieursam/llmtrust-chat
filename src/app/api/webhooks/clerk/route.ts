@@ -60,11 +60,6 @@ export async function POST(req: Request) {
       return new Response('No email found for user', { status: 400 });
     }
 
-    // Construct the user's full name if available
-    const name = first_name && last_name
-      ? `${first_name} ${last_name}`
-      : first_name || null;
-
     try {
       // Check if user already exists
       const existingUser = await db.select()
@@ -77,9 +72,9 @@ export async function POST(req: Request) {
         await db.update(users)
           .set({
             email: primaryEmail,
-            name: name,
-            avatarUrl: image_url,
-            updatedAt: new Date(),
+            first_name: first_name,
+            last_name: last_name,
+            image_url: image_url,
           })
           .where(eq(users.id, id));
       } else {
@@ -87,8 +82,9 @@ export async function POST(req: Request) {
         await db.insert(users).values({
           id: id,
           email: primaryEmail,
-          name: name,
-          avatarUrl: image_url,
+          first_name: first_name,
+          last_name: last_name,
+          image_url: image_url,
         });
       }
 
