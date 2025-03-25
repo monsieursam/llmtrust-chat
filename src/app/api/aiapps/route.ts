@@ -44,13 +44,13 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const [newLLM] = await db.insert(aiApps)
+    const [aiApp] = await db.insert(aiApps)
       .values({
         ...body,
       })
       .returning();
 
-    return NextResponse.json(newLLM);
+    return NextResponse.json(aiApp);
   } catch (error) {
     return NextResponse.json(
       { error },
