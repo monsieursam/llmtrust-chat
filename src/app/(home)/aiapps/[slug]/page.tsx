@@ -4,7 +4,8 @@ import { fetchOneAIApp } from "@/actions/aiapps"
 
 import type { Metadata } from 'next';
 import AiAppInterface from '../_components/aiapps-interface';
-import { fetchAllReviews, fetchReviewsStatsByTypeById, ReviewType } from '@/actions/reviews';
+import { fetchAllReviews, fetchReviewsStatsByTypeById } from '@/actions/reviews';
+import { ReviewType } from '@/app/api/reviews/types';
 
 
 export const revalidate = 3600;
@@ -73,7 +74,7 @@ export default async function AIAppProductPage({
             },
             "author": {
               "@type": "Person",
-              "name": `${review.user.first_name} ${review.user.last_name}`
+              "name": `${review?.user?.first_name} ${review?.user?.last_name}`
             },
             "datePublished": review.createdAt
           }))

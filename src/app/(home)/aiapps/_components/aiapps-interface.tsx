@@ -6,8 +6,6 @@ import Link from "next/link";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { ReviewForm } from "./review-form";
-import { ReviewType } from "@/actions/reviews";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AiApp, Review } from "@/db/schema";
 import { Badge } from "@/components/ui/badge";
@@ -15,11 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Progress } from "@/components/ui/progress";
 import AllReviews from "@/components/all-reviews";
+import { ReviewType, type ReviewWithUser } from "@/app/api/reviews/types";
+import type { AiAppWithLLM } from "@/app/api/aiapps/route";
+import { ReviewForm } from "@/components/review-form";
 
 interface Props {
-  app: AiApp;
+  app: AiAppWithLLM;
   reviewStats: { [key: number]: number };
-  reviews: Review[];
+  reviews: ReviewWithUser[];
 }
 
 const queryClient = new QueryClient();
@@ -45,7 +46,7 @@ export default function AiAppInterface({ app, reviewStats, reviews }: Props) {
                     <div className="flex">
                       {[...Array(5)].map((_, j) => (
                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                        <Star key={j} className={`w-4 h-4 ${j < app.average_rating ? "fill-yellow-400" : "fill-gray-300"}`} />
+                        <Star key={j} className={`w-4 h-4 ${j < Number(app.average_rating || '') ? "fill-yellow-400" : "fill-gray-300"}`} />
                       ))}
                     </div>
                     <span className="text-lg font-semibold">{app.average_rating}</span>
