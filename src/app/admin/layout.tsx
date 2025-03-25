@@ -1,6 +1,7 @@
 import "../globals.css";
 import AdminNav from "./_components/admin-nav";
 import { checkRole } from '@/lib/roles';
+import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
   children,
@@ -10,6 +11,10 @@ export default async function AdminLayout({
   }
 ) {
   const isAdmin = await checkRole('admin');
+
+  if (!isAdmin) {
+    redirect('/');
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>

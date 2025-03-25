@@ -19,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { LLMWithAiApps } from "@/actions/models";
+import type { LLMWithAiApps } from "@/app/api/models/route";
 
 interface Props {
   llm: LLMWithAiApps;

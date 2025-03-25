@@ -1,8 +1,8 @@
-import { createReview, fetchAllReviews, ReviewType } from "@/actions/reviews";
 import { db } from "@/db";
-import { reviews, users } from "@/db/schema";
+import { reviews, users, type Review } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
+import type { ReviewWithUser } from "../../types";
 
 type Params = Promise<{ slug: string }>;
 
@@ -11,8 +11,8 @@ export async function GET(req: NextRequest,
 ) {
   try {
     const { slug } = await params;
-    console.log(slug);
-    const llmReviews = await db
+
+    const llmReviews: ReviewWithUser[] = await db
       .select({
         id: reviews.id,
         rating: reviews.rating,
@@ -20,7 +20,9 @@ export async function GET(req: NextRequest,
         createdAt: reviews.createdAt,
         user: {
           id: users.id,
-          name: users.name, // Adjust based on your actual user schema
+          avatarUrl: users.avatarUrl,
+          first_name: users.first_name,
+          last_name: users.last_name,
           // Add other user fields you want to include
         }
       })

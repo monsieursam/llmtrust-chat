@@ -1,10 +1,10 @@
 import Script from 'next/script'
 
 import { fetchOneAIApp } from "@/actions/aiapps"
-import { fetchAllReviews, fetchReviewsStatsByType, ReviewType } from "@/actions/reviews"
 
-import AiAppInterface from "@/components/client/aiapps-interface"
 import type { Metadata } from 'next';
+import AiAppInterface from '../_components/aiapps-interface';
+import { fetchAllReviews, fetchReviewsStatsByTypeById, ReviewType } from '@/actions/reviews';
 
 
 export const revalidate = 3600;
@@ -18,14 +18,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: `${app?.description?.slice(0, 155)}...`,
     openGraph: {
       title: `${app.name} - AI Application Reviews & Ratings`,
-      description: app.description,
+      // description: app.description,
       images: app.image ? [{ url: app.image }] : [],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${app.name} - AI Application Reviews & Ratings`,
-      description: app.description,
+      // description: app.description,
       images: app.image ? [app.image] : [],
     }
   }
@@ -39,7 +39,7 @@ export default async function AIAppProductPage({
   const { slug } = await params;
   const app = await fetchOneAIApp(slug);
   const reviews = await fetchAllReviews({ id: app.id, type: ReviewType.AIAPP });
-  const reviewStats = await fetchReviewsStatsByType({ id: app.id, type: ReviewType.AIAPP });
+  const reviewStats = await fetchReviewsStatsByTypeById({ id: app.id, type: ReviewType.AIAPP });
 
   return (
     <>
@@ -73,7 +73,7 @@ export default async function AIAppProductPage({
             },
             "author": {
               "@type": "Person",
-              "name": `${review.customer.first_name} ${review.customer.last_name}`
+              "name": `${review.user.first_name} ${review.user.last_name}`
             },
             "datePublished": review.createdAt
           }))

@@ -13,7 +13,7 @@ export async function fetchAllLLM() {
 }
 
 export async function fetchOneLLM(slug: string) {
-  const response = await fetchApi(`/api/models/${slug}`);
+  const response = await fetchApi(`/api/models/${slug}`, { next: { tags: [`models/${slug}`] } });
   const data = await response.json();
 
   return data as LLMWithAiApps;
@@ -32,7 +32,7 @@ export async function fetchOneLLM(slug: string) {
 // }
 
 export async function fetchLatestModels() {
-  const response = await fetchApi("/api/models/latest");
+  const response = await fetchApi("/api/models/latest", { next: { tags: ['models/latest'] } });
   const data = await response.json();
 
   return data as LLM[];
@@ -58,6 +58,7 @@ export async function createLLM(body: Partial<LLM>) {
   const data = await response.json();
 
   revalidateTag('models')
+  revalidateTag('models/latest')
 
   return data as LLM;
 }
@@ -65,10 +66,12 @@ export async function createLLM(body: Partial<LLM>) {
 export async function updateLLM({ slug, data }: { slug: string, data: Partial<LLM> }) {
   const response = await fetchApi(`/api/models/${slug}`, {
     body: JSON.stringify(data),
-    method: "PUT"
+    method: "PUT",
+    next: { tags: [`models/${slug}`] }
   });
 
   revalidateTag('models')
+  revalidateTag(`models/${slug}`)
 
   const newData = await response.json();
 
@@ -77,7 +80,9 @@ export async function updateLLM({ slug, data }: { slug: string, data: Partial<LL
 
 export async function deleteLLM({ slug }: { slug: string }) {
   const response = await fetchApi(`/api/models/${slug}`, { method: "DELETE" });
-  const newData = await response.json();
+  const newData = await response.json()
+
+  revalidateTag('models');
 
   return newData as LLM;
 }
