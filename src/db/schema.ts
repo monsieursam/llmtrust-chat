@@ -10,7 +10,6 @@ export const aiAppStatusEnum = pgEnum('ai_app_status', ['active', 'inactive', 'd
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   email: text('email').notNull(),
-  name: text('name'),
   first_name: text('first_name'),
   last_name: text('last_name'),
   image_url: text('image_url'),
