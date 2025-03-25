@@ -36,6 +36,7 @@
     "@udecode/plate-block-quote": "^44.0.0",
     "@udecode/plate-code-block": "^46.0.4",
     "@udecode/plate-comments": "^45.0.0",
+    "@udecode/plate-dnd": "^46.0.6",
     "@udecode/plate-heading": "^44.0.0",
     "@udecode/plate-highlight": "^44.0.0",
     "@udecode/plate-horizontal-rule": "^44.0.0",
