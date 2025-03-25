@@ -61,8 +61,8 @@ export const llms = pgTable('llm', {
   pricing_input: decimal('pricing_input', { precision: 10, scale: 2 }),
   pricing_output: decimal('pricing_output', { precision: 10, scale: 2 }),
 
-  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
-  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow().notNull(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()).notNull(),
 });
 
 export const tags = pgTable('tag', {
@@ -113,8 +113,8 @@ export const aiApps = pgTable('ai_app', {
   image: text('image'),
   average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
 
-  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
-  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),
+  createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow().notNull(),
+  updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()).notNull(),
 });
 
 export const aiAppsLlms = pgTable('ai_apps_llms', {
