@@ -110,7 +110,7 @@ export const aiApps = pgTable('ai_app', {
   description: text('description'),
   website: text('website'),
   status: aiAppStatusEnum('status').default('active'),
-  slug: text('slug'),
+  slug: text('slug').notNull(),
   image: text('image'),
   average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
 

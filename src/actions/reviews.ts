@@ -1,3 +1,5 @@
+'use server'
+
 import type { ReviewType, ReviewWithUser } from "@/app/api/reviews/types";
 import type { Review } from "@/db/schema";
 import fetchApi from "@/lib/fetch";

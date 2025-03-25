@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AiApp, LLM } from '@/db/schema';
+import { createAIApp, updateAIApp } from '@/actions/aiapps';
 
 interface Props {
   llms: LLM[];
@@ -32,9 +33,9 @@ export function AIAppForm({ initialData, llms, onSuccess }: Props) {
   const onSubmit = async (data: AIAppFormValues) => {
     try {
       if (initialData?.id) {
-        // await updateAIApp.mutateAsync({ id: initialData.id, data });
+        await updateAIApp({ slug: initialData.slug, data });
       } else {
-        // await createAIApp.mutateAsync(data);
+        await createAIApp(data);
       }
       onSuccess?.();
     } catch (error) {
