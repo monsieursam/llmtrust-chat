@@ -9,8 +9,8 @@ const ourFileRouter = {
     .middleware(() => {
       return {};
     })
-    .onUploadComplete(({ file }: { file: any }) => {
-      return { file: file };
+    .onUploadComplete(({ file }) => {
+      return { file };
     }),
 } satisfies FileRouter;
 
