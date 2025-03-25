@@ -23,7 +23,6 @@ type ModelFormValues = Partial<LLM>;
 
 export function ModelForm({ initialData }: ModelFormProps) {
   const router = useRouter();
-  console.log(initialData);
   const form = useForm<ModelFormValues>({
     defaultValues: {
       ...initialData,
@@ -33,7 +32,6 @@ export function ModelForm({ initialData }: ModelFormProps) {
   const onSubmit = async (data: ModelFormValues) => {
     try {
       if (initialData) {
-        console.log(data);
         await updateLLM({ slug: initialData.slug, data });
       } else {
         await createLLM(data);

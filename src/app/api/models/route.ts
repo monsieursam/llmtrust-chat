@@ -16,7 +16,6 @@ export async function GET() {
       .leftJoin(aiAppsLlms, eq(llms.id, aiAppsLlms.aiAppId))
       .leftJoin(aiApps, eq(aiAppsLlms.llmId, aiApps.id));
 
-    console.log(data);
     // Group LLMs under their AI Apps
     const llmWithAiApps = data.reduce((acc, { aiApp, llm }) => {
       const existing = acc.find(a => a.id === llm.id);

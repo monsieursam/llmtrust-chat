@@ -9,7 +9,6 @@ interface LatestModelShowcaseProps {
 }
 
 export function LatestModelShowcase({ latestModels }: LatestModelShowcaseProps) {
-  console.log(latestModels);
   return (
     <div className="mt-8 mb-12">
       <h2 className="text-2xl font-bold text-center mb-6">Latest Models</h2>
