@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@udecode/cn';
@@ -52,10 +51,6 @@ function Calendar({
         row: 'flex w-full mt-2',
         table: 'w-full border-collapse space-y-1',
         ...classNames,
-      }}
-      components={{
-        IconLeft: () => <ChevronLeft className="size-4" />,
-        IconRight: () => <ChevronRight className="size-4" />,
       }}
       showOutsideDays={showOutsideDays}
       {...props}
