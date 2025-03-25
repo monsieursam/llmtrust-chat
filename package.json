@@ -44,7 +44,7 @@
     "@udecode/plate-break": "^44.0.0",
     "@udecode/plate-callout": "^44.0.0",
     "@udecode/plate-caption": "^44.0.0",
-    "@udecode/plate-code-block": "^46.0.4",
+    "@udecode/plate-code-block": "^44.0.0",
     "@udecode/plate-comments": "^45.0.0",
     "@udecode/plate-date": "^44.0.0",
     "@udecode/plate-dnd": "^46.0.6",
