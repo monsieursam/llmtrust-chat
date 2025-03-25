@@ -1,12 +1,9 @@
 'use server'
 
+import type { LLMWithAiApps } from "@/app/api/models/route";
 import { tags, type AiApp, type LLM } from "@/db/schema";
 import fetchApi from "@/lib/fetch";
 import { revalidateTag } from "next/cache";
-
-export interface LLMWithAiApps extends LLM {
-  aiApps: AiApp[];
-}
 
 export async function fetchAllLLM() {
   const response = await fetchApi('/api/models', { next: { tags: ['models'] } });

@@ -3,37 +3,36 @@ import { desc, eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { aiApps, aiAppsLlms, llms, type AiApp, type LLM } from '@/db/schema';
 
-export type LLMWithAiApps = LLM & { aiApps: AiApp[] };
+export type AiAppWithLLM = AiApp & { llms: LLM[] };
 
 export async function GET() {
   try {
     const data = await db
       .select({
-        llm: llms,
         aiApp: aiApps,
+        llm: llms
       })
-      .from(llms)
-      .leftJoin(aiAppsLlms, eq(llms.id, aiAppsLlms.aiAppId))
-      .leftJoin(aiApps, eq(aiAppsLlms.llmId, aiApps.id));
+      .from(aiApps)
+      .leftJoin(aiAppsLlms, eq(aiApps.id, aiAppsLlms.aiAppId))
+      .leftJoin(llms, eq(aiAppsLlms.llmId, llms.id));
 
-    console.log(data);
     // Group LLMs under their AI Apps
-    const llmWithAiApps = data.reduce((acc, { aiApp, llm }) => {
-      const existing = acc.find(a => a.id === llm.id);
+    const aiAppsWithLlms = data.reduce((acc, { aiApp, llm }) => {
+      const existing = acc.find(a => a.id === aiApp.id);
 
       if (existing) {
-        if (aiApp) existing.aiApps.push(aiApp);
+        if (llm) existing.llms.push(llm);
       } else {
         acc.push({
-          ...llm,
-          aiApps: aiApp ? [aiApp] : []
+          ...aiApp,
+          llms: llm ? [llm] : []
         });
       }
 
       return acc;
-    }, [] as LLMWithAiApps[]);
+    }, [] as AiAppWithLLM[]);
 
-    return NextResponse.json(llmWithAiApps);
+    return NextResponse.json(aiAppsWithLlms);
   } catch (error) {
     return NextResponse.json(
       { error },
@@ -45,7 +44,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const [newLLM] = await db.insert(llms)
+    const [newLLM] = await db.insert(aiApps)
       .values({
         ...body,
       })

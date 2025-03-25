@@ -9,10 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import TagsModelForm from './tags-model-form';
+import TagsModelForm from '../../_components/tags-model-form';
 import type { LLM } from '@/db/schema';
 import { createLLM, updateLLM } from '@/actions/models';
-import { useActionState, useState } from 'react';
 
 
 interface ModelFormProps {

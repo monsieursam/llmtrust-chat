@@ -1,3 +1,4 @@
+import type { AiAppWithLLM } from '@/app/api/aiapps/route';
 import type { AiApp, Review } from '@/db/schema';
 import fetchApi from '@/lib/fetch';
 
@@ -5,14 +6,14 @@ export async function fetchAllAIApps() {
   const response = await fetchApi("/api/aiapps");
   const data = await response.json();
 
-  return data as AiApp[];
+  return data as AiAppWithLLM[];
 }
 
 export async function fetchOneAIApp(slug: string) {
   const response = await fetchApi(`/api/aiapps/${slug}`);
   const data = await response.json();
 
-  return data as AiApp;
+  return data as AiAppWithLLM;
 }
 
 export async function createAIApp(data: Partial<AiApp>) {

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest,
     const reviewsData = await db
       .select()
       .from(reviews)
-      .where(eq(reviews.llmId, slug));
+      .where(eq(reviews.aiAppId, slug));
 
     // Initialize stats object with 0 counts for ratings 1-5
     const stats = {

@@ -2,18 +2,19 @@
 
 import { redirect } from 'next/navigation';
 import { checkRole } from '@/lib/roles';
-import { ModelForm } from '../_components/model-form';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { fetchOneLLM } from '@/actions/models';
+import { fetchAllLLM } from '@/actions/models';
+import { fetchOneAIApp } from '@/actions/aiapps';
+import { AIAppForm } from '../_components/ai-app-form';
 
-interface EditModelPageProps {
+interface EditAIAppPageProps {
   params: Promise<{
     slug: string;
   }>;
 }
 
-export default async function EditModelPage({ params }: EditModelPageProps) {
+export default async function EditAIAppPage({ params }: EditAIAppPageProps) {
   const isAdmin = await checkRole('admin');
   const { slug } = await params;
 
@@ -21,20 +22,21 @@ export default async function EditModelPage({ params }: EditModelPageProps) {
     redirect('/')
   }
 
-  const model = await fetchOneLLM(slug);
+  const aiapp = await fetchOneAIApp(slug);
+  const llms = await fetchAllLLM();
 
-  if (!model) {
-    redirect('/admin/models');
+  if (!aiapp) {
+    redirect('/admin/aiapps');
   }
 
   return (
     <div className="container mx-auto p-4">
       <div className="mb-4">
         <Button variant="outline" asChild>
-          <Link href="/admin/models">Back to Models</Link>
+          <Link href="/admin/aiapps">Back to AI Apps</Link>
         </Button>
       </div>
-      <ModelForm initialData={model} />
+      <AIAppForm initialData={aiapp} llms={llms} />
     </div>
   );
 }

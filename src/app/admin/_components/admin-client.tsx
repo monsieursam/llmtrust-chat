@@ -28,7 +28,15 @@ export default async function AdminClient() {
           </Card>
         </TabsContent>
         <TabsContent value="aiapps">
-          {/* <AIAppTable /> */}
+          <Card className="p-6 my-2">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">AI Applications</h2>
+              <Button asChild>
+                <Link href="/admin/aiapps">Manage AI Apps</Link>
+              </Button>
+            </div>
+            <p className="text-muted-foreground">Manage your AI applications, add new apps, or edit existing ones.</p>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
