@@ -5,7 +5,7 @@ import type { AiApp, Review } from '@/db/schema';
 import fetchApi from '@/lib/fetch';
 
 export async function fetchAllAIApps() {
-  const response = await fetchApi("/api/aiapps");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/aiapps`);
   const data = await response.json();
 
   return data as AiAppWithLLM[];
