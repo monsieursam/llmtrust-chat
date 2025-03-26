@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { reviews, users, type Review } from "@/db/schema";
+import { llms, reviews, users, type Review } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import type { ReviewWithUser } from "../../types";
@@ -11,8 +11,19 @@ export async function GET(req: NextRequest,
 ) {
   try {
     const { slug } = await params;
+    console.log(slug);
+    const llm = await db.query.llms.findFirst({
+      where: (Llms, { eq }) => eq(Llms.slug, slug)
+    });
 
-    const llmReviews: ReviewWithUser[] = await db
+    if (!llm) {
+      return NextResponse.json(
+        { error: "AI App not found" },
+        { status: 404 }
+      );
+    }
+
+    const aiAppReviews: ReviewWithUser[] = await db
       .select({
         id: reviews.id,
         rating: reviews.rating,
@@ -23,15 +34,14 @@ export async function GET(req: NextRequest,
           image_url: users.image_url,
           first_name: users.first_name,
           last_name: users.last_name,
-          // Add other user fields you want to include
         }
       })
       .from(reviews)
+      .where(eq(reviews.llmId, llm.id))
       .leftJoin(users, eq(reviews.userId, users.id))
-      .where(eq(reviews.llmId, slug))
-      .orderBy(reviews.createdAt)
+      .orderBy(reviews.createdAt);
 
-    return NextResponse.json(llmReviews, { status: 200 });
+    return NextResponse.json(aiAppReviews, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error },
@@ -47,15 +57,24 @@ export async function POST(req: NextRequest,
     const reviewData = await req.json();
     const { slug } = await params;
 
+    const llm = await db.query.llms.findFirst({
+      where: (Llms, { eq }) => eq(Llms.slug, slug)
+    });
+    if (!llm) {
+      return NextResponse.json(
+        { error: "AI App not found" },
+        { status: 404 }
+      )
+    }
+
     const [newReview] = await db.insert(reviews)
       .values({
         rating: reviewData.rating,
         content: reviewData.content,
-        llmId: slug,
+        llmId: llm.id,
         userId: reviewData.userId,
       })
       .returning();
-
 
     return NextResponse.json(newReview, { status: 201 });
   } catch (error) {
