@@ -6,14 +6,14 @@ import fetchApi from "@/lib/fetch";
 import { revalidateTag } from "next/cache";
 
 export async function fetchAllLLM() {
-  const response = await fetch('/api/models', { next: { tags: ['models'] } });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/models`, { next: { tags: ['models'] } });
   const data = await response.json();
 
   return data as LLM[];
 }
 
 export async function fetchOneLLM(slug: string) {
-  const response = await fetch(`/api/models/${slug}`, { next: { tags: [`models/${slug}`] } });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/models/${slug}`, { next: { tags: [`models/${slug}`] } });
   const data = await response.json();
 
   return data as LLMWithAiApps;
@@ -32,7 +32,7 @@ export async function fetchOneLLM(slug: string) {
 // }
 
 export async function fetchLatestModels() {
-  const response = await fetch("/api/models/latest", { next: { tags: ['models/latest'] } });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/models/latest`, { next: { tags: ['models/latest'] } });
   const data = await response.json();
 
   return data as LLM[];
