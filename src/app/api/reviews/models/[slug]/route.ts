@@ -11,7 +11,6 @@ export async function GET(req: NextRequest,
 ) {
   try {
     const { slug } = await params;
-    console.log(slug);
     const llm = await db.query.llms.findFirst({
       where: (Llms, { eq }) => eq(Llms.slug, slug)
     });

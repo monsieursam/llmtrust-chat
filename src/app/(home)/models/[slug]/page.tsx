@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, MessageSquare, Calendar, ThumbsUp, SquareArrowUpRight, SquareArrowOutUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AllReviews from "@/components/all-reviews";
 
 import Image from "next/image";
 
@@ -45,8 +46,8 @@ export default async function ModelPage({
 }) {
   const { slug } = await params;
   const llm = await fetchOneLLM(slug);
-  const reviews = await fetchAllReviews({ id: llm.id, type: ReviewType.MODEL });
-  const reviewStats = await fetchReviewsStatsByTypeById({ id: llm.id, type: ReviewType.MODEL });
+  const reviews = await fetchAllReviews({ slug, type: ReviewType.MODEL });
+  const reviewStats = await fetchReviewsStatsByTypeById({ slug: slug, type: ReviewType.MODEL });
 
   if (!llm) {
     return (
@@ -60,7 +61,7 @@ export default async function ModelPage({
   }
 
   return (
-    <>
+    <div className="flex-1">
       <Script id="review-schema" type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -93,6 +94,7 @@ export default async function ModelPage({
       </Script>
 
       <ModelInterface llm={llm} reviews={reviews} reviewStats={reviewStats} />
-    </>
+      <AllReviews slug={slug} type={ReviewType.MODEL} />
+    </div>
   );
 }
