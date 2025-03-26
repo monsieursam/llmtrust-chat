@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
         enabled: true,
       },
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
+      success_url: `${process.env.API_URL}/payment/success`,
+      cancel_url: `${process.env.API_URL}/payment/cancel`,
       payment_intent_data: {
         metadata: {
           userId: userId,
@@ -49,9 +49,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ id: session.id }, { status: 201 });
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json(
-      { error: err },
+      { error },
       { status: 500 }
     );
   }

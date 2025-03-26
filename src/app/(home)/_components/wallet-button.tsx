@@ -30,7 +30,7 @@ function WalletButton() {
     const response = await authenticateFetch('/api/stripe', { method: 'POST', body: JSON.stringify({ total, amount }) });
     const data = await response.json();
 
-    await stripe?.redirectToCheckout({ sessionId: data.data.id });
+    await stripe?.redirectToCheckout({ sessionId: data.id });
   };
 
   return (
