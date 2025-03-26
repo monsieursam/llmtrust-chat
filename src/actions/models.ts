@@ -6,7 +6,7 @@ import fetchApi from "@/lib/fetch";
 import { revalidateTag } from "next/cache";
 
 export async function fetchAllLLM() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/models`, { next: { tags: ['models'] } });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/models`);
   const data = await response.json();
 
   return data as LLM[];
