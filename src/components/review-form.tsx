@@ -13,9 +13,9 @@ import { Form, FormControl, FormField } from '@/components/ui/form';
 import { SettingsProvider } from '@/components/editor/settings';
 import { useRouter } from 'next/navigation';
 import { SheetClose, SheetFooter } from '@/components/ui/sheet';
-import { useCreateReview } from '@/hooks/use-reviews';
 import type { ReviewType } from '@/app/api/reviews/types';
 import { toast } from 'sonner';
+import { createReview } from '@/actions/reviews';
 
 interface ReviewFormProps {
   id: string;
@@ -27,11 +27,10 @@ interface FormData {
   content: Value;
 };
 
-export function ReviewForm({ id, type, slug }: ReviewFormProps) {
+export function ReviewForm({ type, slug }: ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
-  const { mutate: createReview, isPending } = useCreateReview({ typeId: id, type });
   const editor = useCreateEditor({});
   const form = useForm<FormData>({
     defaultValues: {
@@ -43,7 +42,9 @@ export function ReviewForm({ id, type, slug }: ReviewFormProps) {
     const value = form.getValues();
 
     await createReview({
-      data: {
+      slug,
+      type: type,
+      body: {
         content: value.content,
         rating: rating,
       }
@@ -119,9 +120,7 @@ export function ReviewForm({ id, type, slug }: ReviewFormProps) {
               className="w-full"
               disabled={rating === 0}
             >
-              {
-                isPending ? <Loader className='animate-spin' /> : 'Submit Review'
-              }
+              Submit Review
             </Button>
           </SheetClose>
         </>

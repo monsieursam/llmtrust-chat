@@ -1,18 +1,29 @@
 import { db } from "@/db";
-import { reviews, users, type Review } from "@/db/schema";
+import { aiApps, reviews, users, type Review } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import type { ReviewWithUser } from "../../types";
+import type { ApiSlugParams } from "@/app/api/types";
 
-type Params = Promise<{ slug: string }>;
 
 export async function GET(req: NextRequest,
-  { params }: { params: Params }
+  { params }: { params: ApiSlugParams }
 ) {
   try {
     const { slug } = await params;
+    console.log(slug);
+    const aiapp = await db.query.aiApps.findFirst({
+      where: (aiApps, { eq }) => eq(aiApps.slug, slug)
+    });
 
-    const llmReviews: ReviewWithUser[] = await db
+    if (!aiapp) {
+      return NextResponse.json(
+        { error: "AI App not found" },
+        { status: 404 }
+      );
+    }
+
+    const aiAppReviews: ReviewWithUser[] = await db
       .select({
         id: reviews.id,
         rating: reviews.rating,
@@ -26,12 +37,13 @@ export async function GET(req: NextRequest,
         }
       })
       .from(reviews)
+      .where(eq(reviews.aiAppId, aiapp.id))
       .leftJoin(users, eq(reviews.userId, users.id))
-      .where(eq(reviews.aiAppId, slug))
-      .orderBy(reviews.createdAt)
+      .orderBy(reviews.createdAt);
 
-    return NextResponse.json(llmReviews, { status: 200 });
+    return NextResponse.json(aiAppReviews, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error },
       { status: 500 }
@@ -40,23 +52,34 @@ export async function GET(req: NextRequest,
 }
 
 export async function POST(req: NextRequest,
-  { params }: { params: Params }
+  { params }: { params: ApiSlugParams }
 ) {
   try {
     const reviewData = await req.json();
     const { slug } = await params;
 
+    const aiapp = await db.query.aiApps.findFirst({
+      where: (aiApps, { eq }) => eq(aiApps.slug, slug)
+    });
+    if (!aiapp) {
+      return NextResponse.json(
+        { error: "AI App not found" },
+        { status: 404 }
+      )
+    }
+
     const [newReview] = await db.insert(reviews)
       .values({
         rating: reviewData.rating,
         content: reviewData.content,
-        aiAppId: slug,
+        aiAppId: aiapp.id,
         userId: reviewData.userId,
       })
       .returning();
 
     return NextResponse.json(newReview, { status: 201 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error },
       { status: 500 }

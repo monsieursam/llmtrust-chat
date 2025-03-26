@@ -1,3 +1,5 @@
+'use client'
+
 import type { Value } from "@udecode/plate";
 import { Plate, usePlateEditor, type PlateEditor as PlateEditorType } from "@udecode/plate/react";
 import { Star, Trash2 } from "lucide-react";
@@ -14,10 +16,10 @@ import type { ReviewType, ReviewWithUser } from "@/app/api/reviews/types";
 interface Props {
   review: ReviewWithUser;
   type: ReviewType;
-  id: string;
+  slug: string;
 }
 
-export default function ItemReview({ review, id, type }: Props) {
+export default function ItemReview({ review, slug, type }: Props) {
   const editor = useCreateEditor({
     value: review.content as string | Value | ((editor: PlateEditorType) => Value) | undefined,
   });
@@ -27,7 +29,7 @@ export default function ItemReview({ review, id, type }: Props) {
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this review?")) return;
-    const response = await axios.delete(`/api/${type}/${id}/reviews/${review.id}`);
+    const response = await axios.delete(`/api/${type}/${slug}/reviews/${review.id}`);
     router.refresh();
   };
 

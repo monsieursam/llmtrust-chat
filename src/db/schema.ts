@@ -50,7 +50,7 @@ export const messages = pgTable('messages', {
 export const llms = pgTable('llm', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
-  slug: text('slug').notNull(),
+  slug: text('slug').notNull().unique(),
   created_date: text('created'),
   website: text('website'),
   description: text('description'),
@@ -109,7 +109,7 @@ export const aiApps = pgTable('ai_app', {
   description: text('description'),
   website: text('website'),
   status: aiAppStatusEnum('status').default('active'),
-  slug: text('slug').notNull(),
+  slug: text('slug').notNull().unique(),
   image: text('image'),
   average_rating: decimal('average_rating', { precision: 3, scale: 2 }),
 

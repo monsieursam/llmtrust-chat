@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import AiAppInterface from '../_components/aiapps-interface';
 import { fetchAllReviews, fetchReviewsStatsByTypeById } from '@/actions/reviews';
 import { ReviewType } from '@/app/api/reviews/types';
+import AllReviews from '@/components/all-reviews';
 
 
 export const revalidate = 3600;
@@ -39,11 +40,11 @@ export default async function AIAppProductPage({
 }) {
   const { slug } = await params;
   const app = await fetchOneAIApp(slug);
-  const reviews = await fetchAllReviews({ id: app.id, type: ReviewType.AIAPP });
-  const reviewStats = await fetchReviewsStatsByTypeById({ id: app.id, type: ReviewType.AIAPP });
+  const reviews = await fetchAllReviews({ slug, type: ReviewType.AIAPP });
+  const reviewStats = await fetchReviewsStatsByTypeById({ slug, type: ReviewType.AIAPP });
 
   return (
-    <>
+    <div className='flex-1'>
       <Script id="review-schema" type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -64,7 +65,7 @@ export default async function AIAppProductPage({
             "bestRating": "5",
             "worstRating": "1"
           },
-          "review": reviews.map(review => ({
+          "review": reviews?.map(review => ({
             "@type": "Review",
             "reviewRating": {
               "@type": "Rating",
@@ -85,6 +86,7 @@ export default async function AIAppProductPage({
         reviews={reviews}
         reviewStats={reviewStats}
       />
-    </>
+      <AllReviews slug={slug} type={ReviewType.AIAPP} />
+    </div>
   )
 }

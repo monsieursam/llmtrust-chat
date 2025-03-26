@@ -12,10 +12,20 @@ export async function GET(req: NextRequest,
 ) {
   try {
     const { slug } = await params;
+    const aiapp = await db.query.aiApps.findFirst({
+      where: (aiApps, { eq }) => eq(aiApps.slug, slug)
+    });
+    if (!aiapp) {
+      return NextResponse.json(
+        { error: "AI App not found" },
+        { status: 404 }
+      );
+    }
+
     const reviewsData = await db
       .select()
       .from(reviews)
-      .where(eq(reviews.aiAppId, slug));
+      .where(eq(reviews.aiAppId, aiapp.id));
 
     // Initialize stats object with 0 counts for ratings 1-5
     const stats = {
