@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 export default function PaymentPage() {
   const router = useRouter();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const previousPage = localStorage.getItem('previousPage');
 
