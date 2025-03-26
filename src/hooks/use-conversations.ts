@@ -61,12 +61,6 @@ export function useConversations() {
   const createMutation = useMutation({
     mutationFn: createConversation,
     onSuccess: (newConversation) => {
-      // Optimistically update the conversations list
-      // queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
-      //   return oldData ? [newConversation, ...oldData] : [newConversation];
-      // });
-
-      // Invalidate the conversations query to refetch
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
@@ -74,15 +68,6 @@ export function useConversations() {
   const updateMutation = useMutation({
     mutationFn: updateConversation,
     onSuccess: (newConversation) => {
-      // Optimistically update the conversations list
-      // queryClient.setQueryData<Conversation[]>(['conversations'], (oldData) => {
-      //   if (!oldData) return [newConversation];
-      //   const index = oldData.findIndex((conversation) => conversation.id === newConversation.id);
-      //   if (index === -1) return [newConversation, ...oldData];
-      //   return [...oldData.slice(0, index), newConversation, ...oldData.slice(index + 1)];
-      // });
-
-      // Invalidate the conversations query to refetch
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });

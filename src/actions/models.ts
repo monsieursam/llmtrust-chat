@@ -57,8 +57,8 @@ export async function createLLM(body: Partial<LLM>) {
   const response = await fetchApi('/api/models', { body: JSON.stringify(body), method: "POST" });
   const data = await response.json();
 
-  revalidateTag('models')
-  revalidateTag('models/latest')
+  revalidateTag('models');
+  revalidateTag('models/latest');
 
   return data as LLM;
 }
@@ -67,11 +67,10 @@ export async function updateLLM({ slug, data }: { slug: string, data: Partial<LL
   const response = await fetchApi(`/api/models/${slug}`, {
     body: JSON.stringify(data),
     method: "PUT",
-    next: { tags: [`models/${slug}`] }
   });
 
-  revalidateTag('models')
-  revalidateTag(`models/${slug}`)
+  revalidateTag('models');
+  revalidateTag(`models/${slug}`);
 
   const newData = await response.json();
 
@@ -83,6 +82,7 @@ export async function deleteLLM({ slug }: { slug: string }) {
   const newData = await response.json()
 
   revalidateTag('models');
+  revalidateTag(`models/${slug}`);
 
   return newData as LLM;
 }

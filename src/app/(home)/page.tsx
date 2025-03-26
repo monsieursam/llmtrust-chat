@@ -5,6 +5,7 @@ import { StarIcon, ShieldCheckIcon, TrendingUpIcon, MessageSquareIcon, BrainCirc
 import Link from "next/link";
 import { LatestModelShowcase } from "./_components/latest-model-showcase";
 import { fetchLatestModels } from "@/actions/models";
+import QuickStart from "./_components/quick-start";
 // import Link from "next/link";
 // import { HeroSearch } from "@/components/client/hero-search";
 // import QuickStart from "@/components/client/quick-start";
@@ -41,7 +42,7 @@ export default async function Home() {
 
       {/* Quick Integration Guide */}
 
-      {/* <QuickStart /> */}
+      <QuickStart />
 
       {/* Trust Badges */}
       <section className="py-16">

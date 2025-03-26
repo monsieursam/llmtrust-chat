@@ -86,10 +86,11 @@ export const reviews = pgTable('review', {
 export const apiKeys = pgTable('api_key', {
   id: uuid('id').primaryKey().defaultRandom(),
   key: text('key').notNull(),
-  name: text('name'),
+  name: text('name').default('default'),
+  is_active: boolean('is_active').default(true),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const credits = pgTable('credit', {
@@ -179,3 +180,5 @@ export type LLM = typeof llms.$inferSelect;
 export type Tag = typeof tags.$inferSelect;
 export type AiApp = typeof aiApps.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
+export type Credit = typeof credits.$inferSelect;
+export type ApiKey = typeof apiKeys.$inferSelect;
