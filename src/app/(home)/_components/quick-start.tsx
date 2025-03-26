@@ -1,6 +1,7 @@
 'use client'
 
 import { SignInButton, useAuth } from "@clerk/nextjs";
+
 import { BrainCircuitIcon, CheckCircle2Icon, MessageSquareIcon, ShieldCheckIcon, TrendingUpIcon, Wallet } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApiKeyGenerator } from "./api-key-generator";

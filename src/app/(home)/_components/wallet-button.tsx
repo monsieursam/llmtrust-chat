@@ -8,16 +8,17 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@clerk/nextjs";
+import { useCredits } from "@/hooks/use-credits";
+import useFetch from "@/hooks/use-fetch";
 
 
 function WalletButton() {
-  const balance = 10;
-  // const { data: balance } = useCredits();
+  const { data: balance } = useCredits();
   const [amount, setAmount] = useState(5);
   const { isSignedIn } = useAuth();
+  const authenticateFetch = useFetch();
 
   const fee = 0.50;
   const total = amount + fee;
@@ -26,13 +27,14 @@ function WalletButton() {
   const handleAddFunds = async () => {
     localStorage.setItem('previousPage', router);
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || '');
-    const response = await axios.post('/api/stripe', { total, amount });
-    await stripe?.redirectToCheckout({ sessionId: response.data.id });
+    const response = await authenticateFetch('/api/stripe', { method: 'POST', body: JSON.stringify({ total, amount }) });
+    const data = await response.json();
+
+    await stripe?.redirectToCheckout({ sessionId: data.data.id });
   };
 
   return (
     <div className="flex gap-2 items-center">
-
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
