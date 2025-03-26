@@ -12,7 +12,7 @@ export async function fetchAllAIApps() {
 }
 
 export async function fetchOneAIApp(slug: string) {
-  const response = await fetchApi(`/api/aiapps/${slug}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/aiapps/${slug}`);
   const data = await response.json();
 
   return data as AiAppWithLLM;
@@ -23,16 +23,6 @@ export async function createAIApp(data: Partial<AiApp>) {
   const newData = await response.json();
 
   return newData as AiApp;
-}
-
-export async function createAIAppReview(slug: string, data: Partial<Review>) {
-  const response = await fetchApi(
-    `/api/aiapps/${slug}/reviews`,
-    { body: JSON.stringify(data), method: "POST" },
-  );
-  const newData = await response.json();
-
-  return newData as Review;
 }
 
 export async function updateAIApp({ slug, data }: { slug: string, data: Partial<AiApp> }) {
