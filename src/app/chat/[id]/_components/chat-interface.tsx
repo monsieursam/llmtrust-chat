@@ -8,15 +8,16 @@ import { useParams } from 'next/navigation';
 import { Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { updateConversation } from '@/actions/conversations';
-import { createMessage } from '@/actions/messages';
 import type { Message } from '@/db/schema';
+import { useMessages } from '@/hooks/use-messages';
 
 interface Props {
   messages: Message[];
 }
 
-export default function ChatInterface({ messages: messageData }: Props) {
+export default function ChatInterface() {
   const { id } = useParams();
+  const { messages: messageData, saveMessage } = useMessages(id as string);
 
   const { messages, input, handleInputChange, handleSubmit, setInput } = useChat({
     initialMessages: messageData.map(msg => ({
@@ -30,7 +31,7 @@ export default function ChatInterface({ messages: messageData }: Props) {
       model: 'gpt-3.5-turbo',
     },
     onFinish(message, options) {
-      createMessage({
+      saveMessage({
         role: message.role,
         content: message.content || '',
         conversationId: id as string,
@@ -44,7 +45,7 @@ export default function ChatInterface({ messages: messageData }: Props) {
   ) => {
     e.preventDefault();
     handleSubmit();
-    createMessage({
+    saveMessage({
       role: 'user',
       content: input,
       conversationId: id as string,

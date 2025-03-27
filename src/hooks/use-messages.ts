@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Message } from '@/db/schema';
+import useFetch from './use-fetch';
 
 interface SaveMessageData {
   content: string;
@@ -9,35 +10,40 @@ interface SaveMessageData {
 }
 
 // Function to fetch messages for a conversation
-const fetchMessages = async (conversationId: string): Promise<Message[]> => {
-  const response = await fetch(`/api/messages?conversationId=${conversationId}`);
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch messages');
-  }
-
-  return response.json();
-};
 
 // Function to save a new message
-const saveMessage = async (data: SaveMessageData): Promise<Message> => {
-  const response = await fetch('/api/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
 
-  if (!response.ok) {
-    throw new Error('Failed to save message');
-  }
-
-  return response.json();
-};
 
 export function useMessages(conversationId: string) {
   const queryClient = useQueryClient();
+  const authenticatedFetch = useFetch();
+
+  const fetchMessages = async (conversationId: string): Promise<Message[]> => {
+    const response = await authenticatedFetch(`/api/conversations/${conversationId}/messages`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch messages');
+    }
+
+    return response.json();
+  };
+
+  const saveMessage = async (data: SaveMessageData): Promise<Message> => {
+    const response = await authenticatedFetch(`/api/conversations/${conversationId}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save message');
+    }
+
+    return response.json();
+  };
 
   // Query for fetching messages for a specific conversation
   const query = useQuery({
@@ -47,14 +53,9 @@ export function useMessages(conversationId: string) {
   });
 
   // Mutation for saving a new message
-  const saveMutation = useMutation({
+  const createMessage = useMutation({
     mutationFn: saveMessage,
     onSuccess: (newMessage) => {
-      // Optimistically update the messages list
-      queryClient.setQueryData<Message[]>(['messages', conversationId], (oldData) => {
-        return oldData ? [...oldData, newMessage] : [newMessage];
-      });
-
       // Invalidate the messages query to refetch
       queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
       // Also invalidate the conversations query as the last message timestamp will change
@@ -67,7 +68,7 @@ export function useMessages(conversationId: string) {
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
-    saveMessage: saveMutation.mutate,
-    isSaving: saveMutation.isPending,
+    saveMessage: createMessage.mutate,
+    isSaving: createMessage.isPending,
   };
 }
