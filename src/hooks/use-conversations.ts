@@ -39,7 +39,7 @@ export function useConversations() {
   };
 
   const updateConversation = async (data: UpdateConversationData): Promise<Conversation> => {
-    const response = await authenticatedFetch('/api/conversations', {
+    const response = await authenticatedFetch(`/api/conversations/${data.id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

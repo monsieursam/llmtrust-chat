@@ -7,7 +7,7 @@ interface PromptProps {
   prompt?: string;
   system?: string;
   messages?: CoreMessage[];
-  provider: keyof typeof allProviders;
+  provider: string;
   model: string;
 }
 

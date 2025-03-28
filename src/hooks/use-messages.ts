@@ -5,8 +5,8 @@ import useFetch from './use-fetch';
 interface SaveMessageData {
   content: string;
   conversationId: string;
+  llmId: string;
   role: 'user' | 'assistant' | 'system' | 'data';
-  aiAssistantId?: string | null;
 }
 
 // Function to fetch messages for a conversation

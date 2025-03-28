@@ -33,7 +33,14 @@ export async function POST(req: Request) {
     model: currentProvider(model),
     messages,
     system,
-  });
+    onFinish: async (completion) => {
+      console.log('Finished streaming', completion.usage.completionTokens);
+      console.log('Finished streaming', completion.usage.promptTokens);
+      console.log('Finished streaming', completion.usage.totalTokens);
+    }
+  },
+
+  );
 
   return result.toDataStreamResponse();
 }
