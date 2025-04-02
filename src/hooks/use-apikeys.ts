@@ -1,37 +1,21 @@
-import type { ApiKey } from "@/db/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import useFetch from "./use-fetch";
+import { useTRPC } from "@/providers/trpc-provider";
 
 export function useApiKeys() {
   const queryClient = useQueryClient();
-  const authenticatedFetch = useFetch();
+  const trpc = useTRPC();
 
-  const fetchApiKeys = async (): Promise<ApiKey[]> => {
-    const response = await authenticatedFetch('/api/apikeys');
+  const apiKeys = trpc.apiKeys.list.queryOptions();
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch api keys');
-    }
+  const query = useQuery(apiKeys);
 
-    return response.json();
-  };
-
-  const query = useQuery({
-    queryKey: ['apikeys'],
-    queryFn: fetchApiKeys,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post('/api/apikeys');
-
-      return response.data;
+  const createMutation = useMutation(trpc.apiKeys.create.mutationOptions({
+    onSuccess: (newMessage) => {
+      queryClient.invalidateQueries(
+        apiKeys,
+      );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['apikeys'] });
-    },
-  });
+  }));
 
   return {
     apiKeys: query.data,

@@ -1,21 +1,11 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import useFetch from "./use-fetch";
+import { useQuery } from "@tanstack/react-query";
+
+import { useTRPC } from "@/providers/trpc-provider";
 
 export function useCredits() {
-  const queryClient = useQueryClient();
-  const authenticatedFetch = useFetch();
+  const trpc = useTRPC();
 
-  return useQuery<number>({
-    queryKey: ['credits'],
-    queryFn: async () => {
-      const response = await authenticatedFetch('/api/credits');
-      if (!response.ok) {
-        throw new Error('Failed to fetch credits');
-      }
-      const data = await response.json();
+  const conversationQuery = trpc.credits.getBalance.queryOptions();
 
-      return data as number;
-    },
-  });
+  return useQuery(conversationQuery);
 }

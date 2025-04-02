@@ -5,17 +5,16 @@ import { SignInButton, useAuth } from "@clerk/nextjs";
 import { BrainCircuitIcon, CheckCircle2Icon, MessageSquareIcon, ShieldCheckIcon, TrendingUpIcon, Wallet } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApiKeyGenerator } from "./api-key-generator";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WalletButtonContainer } from "./wallet-button";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { TRPCProviderContainer } from "@/providers/trpc-provider";
 
 export default function QuickStart() {
-  const queryClient = new QueryClient();
   const { isSignedIn } = useAuth();
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <TRPCProviderContainer>
       <section className="py-8 sm:py-12 md:py-16 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-12">Quick Integration Guide</h2>
@@ -144,6 +143,6 @@ response = requests.post(
           </div>
         </div>
       </section>
-    </QueryClientProvider>
+    </TRPCProviderContainer>
   );
 }

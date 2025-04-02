@@ -8,12 +8,14 @@ import { useConversations } from '@/hooks/use-conversations'
 // This page will create a new conversation and redirect to it
 export default function Home() {
   const router = useRouter()
-  const { createConversation, createConversationData } = useConversations()
+  const { createConversation } = useConversations()
 
   useEffect(() => {
     const createNewConversation = async () => {
       try {
-        await createConversation({ title: 'new conversation' });
+        const data = await createConversation({ title: 'new conversation' });
+
+        router.push(`/chat/${data?.id}`) // redirect t
 
       } catch (error) {
         console.error('Error creating new conversation:', error)
@@ -22,13 +24,6 @@ export default function Home() {
 
     createNewConversation()
   }, [])
-
-  useEffect(() => {
-    if (createConversationData) {
-      console.log('createConversationData', createConversationData)
-      // router.push(`/chat/${createConversationData.id}`)
-    }
-  }, [createConversationData, router])
 
   return (
     <div className="flex items-center justify-center h-screen">

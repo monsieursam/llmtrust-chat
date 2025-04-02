@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useAuth } from "@clerk/nextjs";
 import { useCredits } from "@/hooks/use-credits";
 import useFetch from "@/hooks/use-fetch";
+import { TRPCProviderContainer } from "@/providers/trpc-provider";
 
 
 function WalletButton() {
@@ -101,11 +102,9 @@ function WalletButton() {
 }
 
 export function WalletButtonContainer() {
-  const queryClient = new QueryClient()
-
   return (
-    <QueryClientProvider client={queryClient}>
+    <TRPCProviderContainer>
       <WalletButton />
-    </QueryClientProvider>
+    </TRPCProviderContainer>
   )
 }
