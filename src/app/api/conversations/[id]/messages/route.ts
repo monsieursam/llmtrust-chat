@@ -1,6 +1,6 @@
 import type { ApiIdParams } from '@/app/api/types';
 import { db } from '@/db';
-import { messages, conversations } from '@/db/schema';
+import { messages, conversations, conversationsUsers } from '@/db/schema';
 import { auth } from '@clerk/nextjs/server';
 import { and, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
@@ -27,13 +27,9 @@ export async function GET(req: Request, { params }: { params: ApiIdParams }) {
     // Verify the conversation belongs to the user
     const conversation = await db
       .select()
-      .from(conversations)
-      .where(
-        and(
-          eq(conversations.id, conversationId),
-          eq(conversations.userId, user.userId)
-        )
-      )
+      .from(conversationsUsers)
+      .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
+      .where(eq(conversationsUsers.userId, user.userId))
       .limit(1);
 
     if (conversation.length === 0) {
@@ -89,13 +85,9 @@ export async function POST(req: Request) {
     // Verify the conversation belongs to the user
     const conversation = await db
       .select()
-      .from(conversations)
-      .where(
-        and(
-          eq(conversations.id, conversationId),
-          eq(conversations.userId, user.userId)
-        )
-      )
+      .from(conversationsUsers)
+      .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
+      .where(eq(conversationsUsers.userId, user.userId))
       .limit(1);
 
     if (conversation.length === 0) {

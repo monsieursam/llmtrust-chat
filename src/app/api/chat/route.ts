@@ -1,5 +1,7 @@
 import { getAnswer } from '@/actions/ai';
+import { deductCredits, getUserCreditBalance } from '@/actions/credits';
 import { openai } from '@ai-sdk/openai';
+import { auth } from '@clerk/nextjs/server';
 import { streamText, generateText } from 'ai';
 import { NextResponse } from 'next/server';
 
@@ -12,6 +14,20 @@ const allProviders = {
 
 export async function POST(req: Request) {
   const { messages, system, provider, model, stream } = await req.json();
+  const user = await auth();
+
+  if (!user?.userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check if user has enough credits
+  const { success, balance } = await getUserCreditBalance(user.userId);
+
+  if (!success || balance <= 0) {
+    return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
+  }
+
+
   const currentProvider = allProviders[provider as keyof typeof allProviders];
 
   if (!currentProvider) {
@@ -26,6 +42,16 @@ export async function POST(req: Request) {
       system,
     });
 
+    // Deduct credits based on token usage
+    if (result.usage) {
+      await deductCredits({
+        userId: user.userId,
+        llmSlug: model, // Using model ID
+        promptTokens: result.usage.promptTokens || 0,
+        completionTokens: result.usage.completionTokens || 0,
+      });
+    }
+
     return NextResponse.json(result);
   }
 
@@ -34,9 +60,14 @@ export async function POST(req: Request) {
     messages,
     system,
     onFinish: async (completion) => {
-      console.log('Finished streaming', completion.usage.completionTokens);
-      console.log('Finished streaming', completion.usage.promptTokens);
-      console.log('Finished streaming', completion.usage.totalTokens);
+      if (completion.usage) {
+        await deductCredits({
+          userId: user.userId,
+          llmSlug: model, // Using model ID
+          promptTokens: completion.usage.promptTokens || 0,
+          completionTokens: completion.usage.completionTokens || 0,
+        });
+      }
     }
   },
 

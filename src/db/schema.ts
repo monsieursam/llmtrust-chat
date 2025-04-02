@@ -23,9 +23,6 @@ export const conversations = pgTable('conversations', {
   id: uuid('id').defaultRandom().primaryKey(),
   title: text('title').notNull(),
   lastMessageAt: timestamp('last_message_at').defaultNow().notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
 
   createdAt: timestamp({ mode: 'date', precision: 3 }).defaultNow(),
   updatedAt: timestamp({ mode: 'date', precision: 3 }).$onUpdate(() => new Date()),

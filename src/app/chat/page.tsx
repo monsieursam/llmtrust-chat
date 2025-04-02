@@ -25,7 +25,8 @@ export default function Home() {
 
   useEffect(() => {
     if (createConversationData) {
-      router.push(`/chat/${createConversationData.id}`)
+      console.log('createConversationData', createConversationData)
+      // router.push(`/chat/${createConversationData.id}`)
     }
   }, [createConversationData, router])
 

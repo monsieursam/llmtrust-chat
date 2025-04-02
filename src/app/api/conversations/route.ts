@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/db';
-import { conversations } from '@/db/schema';
+import { conversations, conversationsUsers } from '@/db/schema';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { eq, desc } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
@@ -16,11 +16,18 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get all conversations for the user
+    // Get all conversations for the user through the junction table
     const userConversations = await db
-      .select()
-      .from(conversations)
-      .where(eq(conversations.userId, user.userId))
+      .select({
+        id: conversations.id,
+        title: conversations.title,
+        lastMessageAt: conversations.lastMessageAt,
+        createdAt: conversations.createdAt,
+        updatedAt: conversations.updatedAt
+      })
+      .from(conversationsUsers)
+      .leftJoin(conversations, eq(conversationsUsers.conversationId, conversations.id))
+      .where(eq(conversationsUsers.userId, user.userId))
       .orderBy(desc(conversations.lastMessageAt));
 
     return NextResponse.json(userConversations);
@@ -56,10 +63,17 @@ export async function POST(req: Request) {
       .insert(conversations)
       .values({
         title,
-        userId: userId,
         lastMessageAt: new Date(),
       })
       .returning();
+
+    // Create the user-conversation relationship
+    await db
+      .insert(conversationsUsers)
+      .values({
+        userId: userId,
+        conversationId: newConversation.id,
+      });
 
     return NextResponse.json(newConversation);
   } catch (error) {

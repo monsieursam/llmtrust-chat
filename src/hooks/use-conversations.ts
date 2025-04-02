@@ -1,10 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Conversation } from '@/db/schema';
 import useFetch from './use-fetch';
+import { trpc } from '@/providers/trpc-provider';
 
-interface CreateConversationData {
-  title: string;
-}
 
 interface UpdateConversationData {
   id: string;
@@ -25,32 +23,6 @@ export function useConversations() {
     return response.json();
   };
 
-  const createConversation = async (data: CreateConversationData): Promise<Conversation> => {
-    const response = await authenticatedFetch('/api/conversations', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create conversation');
-    }
-
-    return response.json();
-  };
-
-  const updateConversation = async (data: UpdateConversationData): Promise<Conversation> => {
-    const response = await authenticatedFetch(`/api/conversations/${data.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create conversation');
-    }
-
-    return response.json();
-  };
-
   // Query for fetching all conversations
   const query = useQuery({
     queryKey: ['conversations'],
@@ -58,15 +30,13 @@ export function useConversations() {
   });
 
   // Mutation for creating a new conversation
-  const createMutation = useMutation({
-    mutationFn: createConversation,
+  const createMutation = trpc.conversation.createConversation.useMutation({
     onSuccess: (newConversation) => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: updateConversation,
+  const updateMutation = trpc.conversation.updateConversation.useMutation({
     onSuccess: (newConversation) => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
@@ -78,7 +48,7 @@ export function useConversations() {
     isError: query.isError,
     error: query.error,
     createConversationData: createMutation.data,
-    createConversation: createMutation.mutate,
+    createConversation: createMutation.mutateAsync,
     updateConversation: updateMutation.mutate,
     isUpdating: updateMutation.isPending,
     isCreating: createMutation.isPending,

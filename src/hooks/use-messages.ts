@@ -9,12 +9,6 @@ interface SaveMessageData {
   role: 'user' | 'assistant' | 'system' | 'data';
 }
 
-// Function to fetch messages for a conversation
-
-
-// Function to save a new message
-
-
 export function useMessages(conversationId: string) {
   const queryClient = useQueryClient();
   const authenticatedFetch = useFetch();
