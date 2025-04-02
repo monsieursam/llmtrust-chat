@@ -1,14 +1,13 @@
 import { protectedProcedure, router } from "../trpc";
-// import { z } from "zod";
+import { z } from "zod";
 import { db } from "@/db";
 import { conversations, conversationsUsers } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { type } from 'arktype';
 
 export const conversationRouter = router({
   updateConversation: protectedProcedure
-    .input(type({ id: 'string', title: 'string' }))
+    .input(z.object({ id: z.string(), title: z.string() }))
     .mutation(async ({ input }) => {
       try {
         const { id, title } = input;
@@ -36,7 +35,7 @@ export const conversationRouter = router({
     }),
 
   createConversation: protectedProcedure
-    .input(type({ title: 'string' }))
+    .input(z.object({ title: z.string() }))
     .mutation(async ({ input, ctx }) => {
       try {
         const { title } = input;

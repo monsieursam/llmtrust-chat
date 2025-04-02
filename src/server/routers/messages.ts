@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { messages, conversations, conversationsUsers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
+
 export const messageRouter = router({
   getMessages: protectedProcedure
     .input(z.object({
@@ -17,7 +18,7 @@ export const messageRouter = router({
         .select()
         .from(conversationsUsers)
         .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
-        .where(eq(conversationsUsers.userId, ctx.user?.userId))
+        .where(eq(conversationsUsers.userId, ctx.user?.userId || ''))
         .limit(1);
 
       if (conversation.length === 0) {
@@ -38,7 +39,7 @@ export const messageRouter = router({
     .input(z.object({
       content: z.string(),
       conversationId: z.string(),
-      role: z.string(),
+      role: z.enum(['user', 'assistant']),
       aiAssistantId: z.string().nullable().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -49,7 +50,7 @@ export const messageRouter = router({
         .select()
         .from(conversationsUsers)
         .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
-        .where(eq(conversationsUsers.userId, ctx.user?.userId))
+        .where(eq(conversationsUsers.userId, ctx.user?.userId || ''))
         .limit(1);
 
       if (conversation.length === 0) {
