@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 
 import ChatSidebar from './_components/chat-sidebar'
 import "../globals.css";
-import { TRPCProvider } from '@/providers/trpc-provider';
+import { TRPCProviderContainer } from '@/providers/trpc-provider';
 
 export default async function RootLayout({
   children,
@@ -18,14 +18,14 @@ export default async function RootLayout({
         <body
           className={'antialiased min-h-screen flex flex-col'}
         >
-          <TRPCProvider>
+          <TRPCProviderContainer>
             <SidebarProvider>
               <ChatSidebar />
               <div className='w-full'>
                 {children}
               </div>
             </SidebarProvider>
-          </TRPCProvider>
+          </TRPCProviderContainer>
         </body>
       </html>
     </ClerkProvider>

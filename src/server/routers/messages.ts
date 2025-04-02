@@ -1,6 +1,6 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { db } from "@/db";
+import { readDb, db } from "@/db";
 import { messages, conversations, conversationsUsers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -14,7 +14,7 @@ export const messageRouter = router({
       const { conversationId } = input;
 
       // Verify the conversation belongs to the user
-      const conversation = await db
+      const conversation = await readDb
         .select()
         .from(conversationsUsers)
         .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
@@ -26,7 +26,7 @@ export const messageRouter = router({
       }
 
       // Get all messages for the conversation
-      const conversationMessages = await db
+      const conversationMessages = await readDb
         .select()
         .from(messages)
         .where(eq(messages.conversationId, conversationId))

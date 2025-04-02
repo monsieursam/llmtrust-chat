@@ -32,7 +32,7 @@ export const conversationRouter = router({
     }),
   updateConversation: protectedProcedure
     .input(z.object({ id: z.string(), title: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
         const { id, title } = input;
 
@@ -41,6 +41,17 @@ export const conversationRouter = router({
             code: 'BAD_REQUEST',
             message: 'Title is required'
           });
+        }
+
+        const conversation = await readDb
+          .select()
+          .from(conversationsUsers)
+          .leftJoin(conversations, eq(conversationsUsers.conversationId, id))
+          .where(eq(conversationsUsers.userId, ctx.user?.userId || ''))
+          .limit(1);
+
+        if (conversation.length === 0) {
+          throw new Error('Conversation not found');
         }
 
         const [updatedConversation] = await db

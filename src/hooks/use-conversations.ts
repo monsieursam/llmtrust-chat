@@ -1,24 +1,27 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { trpc } from '@/providers/trpc-provider';
+import { useTRPC } from '@/providers/trpc-provider';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useConversations() {
   const queryClient = useQueryClient();
+  const trpc = useTRPC();
+
+  const conversationQuery = trpc.conversation.getAllConversations.queryOptions();
 
   // Query for fetching all conversations
-  const query = trpc.conversation.getAllConversations.useQuery();
+  const query = useQuery(conversationQuery);
 
   // Mutation for creating a new conversation
-  const createMutation = trpc.conversation.createConversation.useMutation({
+  const createMutation = useMutation(trpc.conversation.createConversation.mutationOptions({
     onSuccess: (newConversation) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries(conversationQuery);
     },
-  });
+  }));
 
-  const updateMutation = trpc.conversation.updateConversation.useMutation({
+  const updateMutation = useMutation(trpc.conversation.updateConversation.mutationOptions({
     onSuccess: (newConversation) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries(conversationQuery);
     },
-  });
+  }));
 
   return {
     conversations: query.data || [],

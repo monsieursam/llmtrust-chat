@@ -3,9 +3,8 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { ConversationList } from '@/app/chat/_components/conversation-list'
 import Link from 'next/link'
-import { StarIcon } from 'lucide-react'
-import { Suspense } from 'react'
 import { NavUser } from '@/components/nav-user'
+import { StarIcon } from 'lucide-react'
 
 export default function ChatSidebar() {
   return (
@@ -28,9 +27,7 @@ export default function ChatSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <Suspense fallback={<div>loadddiiiinnng</div>}>
-          <ConversationList />
-        </Suspense>
+        <ConversationList />
       </SidebarContent>
       <SidebarFooter className="h-16 border-b border-sidebar-border">
         <NavUser />
