@@ -1,6 +1,5 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { readDb, db } from "@/db";
 import { messages, conversations, conversationsUsers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -14,7 +13,7 @@ export const messageRouter = router({
       const { conversationId } = input;
 
       // Verify the conversation belongs to the user
-      const conversation = await readDb
+      const conversation = await ctx.readDb
         .select()
         .from(conversationsUsers)
         .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
@@ -26,7 +25,7 @@ export const messageRouter = router({
       }
 
       // Get all messages for the conversation
-      const conversationMessages = await readDb
+      const conversationMessages = await ctx.readDb
         .select()
         .from(messages)
         .where(eq(messages.conversationId, conversationId))
@@ -46,7 +45,7 @@ export const messageRouter = router({
       const { content, conversationId, role } = input;
 
       // Verify the conversation belongs to the user
-      const conversation = await db
+      const conversation = await ctx.readDb
         .select()
         .from(conversationsUsers)
         .leftJoin(conversations, eq(conversationsUsers.conversationId, conversationId))
@@ -58,7 +57,7 @@ export const messageRouter = router({
       }
 
       // Create a new message
-      const [newMessage] = await db
+      const [newMessage] = await ctx.db
         .insert(messages)
         .values({
           content,
@@ -69,7 +68,7 @@ export const messageRouter = router({
         .returning();
 
       // Update the conversation's lastMessageAt
-      await db
+      await ctx.db
         .update(conversations)
         .set({
           lastMessageAt: new Date(),

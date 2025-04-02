@@ -1,5 +1,6 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server";
+import { db, readDb } from "@/db";
 import { auth } from "@clerk/nextjs/server";
 
 const handler = async (req: Request) => {
@@ -10,7 +11,9 @@ const handler = async (req: Request) => {
     req,
     router: appRouter,
     createContext: () => ({
-      user
+      user,
+      db,
+      readDb
     })
   });
 }

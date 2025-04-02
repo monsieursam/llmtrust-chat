@@ -1,8 +1,11 @@
+import type { db, readDb } from "@/db";
 import type { ClerkMiddlewareAuthObject } from "@clerk/nextjs/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 
 interface Context {
   user: ClerkMiddlewareAuthObject | null;
+  db: typeof db;
+  readDb: typeof readDb;
 }
 
 const t = initTRPC.context<Context>().create();

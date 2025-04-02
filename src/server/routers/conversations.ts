@@ -1,6 +1,5 @@
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
-import { db, readDb } from "@/db";
 import { conversations, conversationsUsers } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
@@ -9,7 +8,7 @@ export const conversationRouter = router({
   getAllConversations: protectedProcedure
     .query(async ({ ctx }) => {
       try {
-        const userConversations = await readDb
+        const userConversations = await ctx.readDb
           .select({
             id: conversations.id,
             title: conversations.title,
@@ -43,7 +42,7 @@ export const conversationRouter = router({
           });
         }
 
-        const conversation = await readDb
+        const conversation = await ctx.readDb
           .select()
           .from(conversationsUsers)
           .leftJoin(conversations, eq(conversationsUsers.conversationId, id))
@@ -54,7 +53,7 @@ export const conversationRouter = router({
           throw new Error('Conversation not found');
         }
 
-        const [updatedConversation] = await db
+        const [updatedConversation] = await ctx.db
           .update(conversations)
           .set({ title })
           .where(eq(conversations.id, id))
@@ -83,7 +82,7 @@ export const conversationRouter = router({
         }
 
         // Create a new conversation
-        const newConversation = await db.transaction(async (tx) => {
+        const newConversation = await ctx.db.transaction(async (tx) => {
           // Prepare the userId once to avoid repeated access
           const userId = ctx.user?.userId || '';
 
