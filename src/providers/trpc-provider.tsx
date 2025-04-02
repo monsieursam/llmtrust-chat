@@ -13,7 +13,6 @@ export function TRCPProvider({ children }: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-
           url: `${process.env.NEXT_PUBLIC_API_URL}/api/trpc`,
         }),
       ],
