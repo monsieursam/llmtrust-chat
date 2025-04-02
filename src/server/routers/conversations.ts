@@ -3,9 +3,33 @@ import { z } from "zod";
 import { db } from "@/db";
 import { conversations, conversationsUsers } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const conversationRouter = router({
+  getAllConversations: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        const userConversations = await db
+          .select({
+            id: conversations.id,
+            title: conversations.title,
+            lastMessageAt: conversations.lastMessageAt,
+            createdAt: conversations.createdAt,
+            updatedAt: conversations.updatedAt
+          })
+          .from(conversationsUsers)
+          .leftJoin(conversations, eq(conversationsUsers.conversationId, conversations.id))
+          .where(eq(conversationsUsers.userId, ctx.user?.userId || ''))
+          .orderBy(desc(conversations.lastMessageAt));
+
+        return userConversations;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch conversations'
+        });
+      }
+    }),
   updateConversation: protectedProcedure
     .input(z.object({ id: z.string(), title: z.string() }))
     .mutation(async ({ input }) => {

@@ -1,33 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Conversation } from '@/db/schema';
-import useFetch from './use-fetch';
+import { useQueryClient } from '@tanstack/react-query';
 import { trpc } from '@/providers/trpc-provider';
-
-
-interface UpdateConversationData {
-  id: string;
-  title: string;
-}
 
 export function useConversations() {
   const queryClient = useQueryClient();
-  const authenticatedFetch = useFetch();
-
-  const fetchConversations = async (): Promise<Conversation[]> => {
-    const response = await authenticatedFetch('/api/conversations');
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch conversations');
-    }
-
-    return response.json();
-  };
 
   // Query for fetching all conversations
-  const query = useQuery({
-    queryKey: ['conversations'],
-    queryFn: fetchConversations,
-  });
+  const query = trpc.conversation.getAllConversations.useQuery();
 
   // Mutation for creating a new conversation
   const createMutation = trpc.conversation.createConversation.useMutation({

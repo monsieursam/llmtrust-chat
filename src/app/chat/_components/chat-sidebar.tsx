@@ -9,8 +9,6 @@ import { Suspense } from 'react'
 import { NavUser } from '@/components/nav-user'
 
 export default function ChatSidebar() {
-  const { conversations } = useConversations();
-
   return (
     <Sidebar>
       <SidebarHeader className="">
@@ -32,7 +30,7 @@ export default function ChatSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <Suspense fallback={<div>loadddiiiinnng</div>}>
-          <ConversationList conversations={conversations} />
+          <ConversationList />
         </Suspense>
       </SidebarContent>
       <SidebarFooter className="h-16 border-b border-sidebar-border">
