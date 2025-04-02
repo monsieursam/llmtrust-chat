@@ -65,13 +65,17 @@ export const conversationRouter = router({
         const { title } = input;
 
         if (!title) {
-          return new TRPCError(
-            { message: 'Title is required', code: 'BAD_REQUEST' },
-          );
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Title is required'
+          });
         }
 
         // Create a new conversation
         const newConversation = await db.transaction(async (tx) => {
+          // Prepare the userId once to avoid repeated access
+          const userId = ctx.user?.userId || '';
+          
           const [conversation] = await tx
             .insert(conversations)
             .values({
@@ -83,7 +87,7 @@ export const conversationRouter = router({
           await tx
             .insert(conversationsUsers)
             .values({
-              userId: ctx.user?.userId || '',
+              userId,
               conversationId: conversation.id,
             });
 
@@ -92,9 +96,9 @@ export const conversationRouter = router({
 
         return newConversation;
       } catch (error) {
-        return new TRPCError({
-          message: 'Failed to create conversation',
+        throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create conversation'
         });
       }
     }),

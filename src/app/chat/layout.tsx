@@ -2,11 +2,10 @@ import {
   ClerkProvider,
 } from '@clerk/nextjs'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import { QueryProvider } from '@/providers/query-provider'
 
 import ChatSidebar from './_components/chat-sidebar'
 import "../globals.css";
-import { TRCPProvider } from '@/providers/trpc-provider';
+import { TRPCProvider } from '@/providers/trpc-provider';
 
 export default async function RootLayout({
   children,
@@ -19,14 +18,14 @@ export default async function RootLayout({
         <body
           className={'antialiased min-h-screen flex flex-col'}
         >
-          <TRCPProvider>
+          <TRPCProvider>
             <SidebarProvider>
               <ChatSidebar />
               <div className='w-full'>
                 {children}
               </div>
             </SidebarProvider>
-          </TRCPProvider>
+          </TRPCProvider>
         </body>
       </html>
     </ClerkProvider>
