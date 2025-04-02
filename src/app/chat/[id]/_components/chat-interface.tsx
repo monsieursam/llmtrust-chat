@@ -25,7 +25,7 @@ interface Props {
 
 export default function ChatInterface({ llms }: Props) {
   const { id } = useParams();
-  const { messages: messageData, saveMessage } = useMessages(id as string);
+  const { messages: messageData } = useMessages(id as string);
   const { updateConversation } = useConversations();
   const [selectedLLM, setSelectedLLM] = useState<LLM | null>(llms.length > 0 ? llms[0] : null);
 
@@ -38,15 +38,8 @@ export default function ChatInterface({ llms }: Props) {
     body: {
       provider: selectedLLM?.provider || 'openai',
       stream: true,
+      conversationId: id as string,
       model: selectedLLM?.slug || 'gpt-3.5-turbo',
-    },
-    onFinish(message, options) {
-      saveMessage({
-        role: message.role,
-        content: message.content || '',
-        conversationId: id as string,
-        llmId: selectedLLM?.id || '',
-      })
     },
   });
 
@@ -56,12 +49,6 @@ export default function ChatInterface({ llms }: Props) {
   ) => {
     e.preventDefault();
     handleSubmit();
-    saveMessage({
-      role: 'user',
-      content: input,
-      conversationId: id as string,
-      llmId: selectedLLM?.id || '',
-    })
 
     if (messages.length === 0) {
       const { text } = await getAnswer({

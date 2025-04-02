@@ -1,5 +1,7 @@
 import { getAnswer } from '@/actions/ai';
 import { deductCredits, getUserCreditBalance } from '@/actions/credits';
+import { db } from '@/db';
+import { messages as messageTable } from '@/db/schema';
 import { openai } from '@ai-sdk/openai';
 import { auth } from '@clerk/nextjs/server';
 import { streamText, generateText } from 'ai';
@@ -13,7 +15,7 @@ const allProviders = {
 };
 
 export async function POST(req: Request) {
-  const { messages, system, provider, model, stream } = await req.json();
+  const { messages, system, provider, model, stream, conversationId } = await req.json();
   const user = await auth();
 
   if (!user?.userId) {
@@ -34,6 +36,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Provider not found' }, { status: 404 });
   }
 
+
+
   if (!stream) {
     const result = await getAnswer({
       provider,
@@ -44,6 +48,11 @@ export async function POST(req: Request) {
 
     // Deduct credits based on token usage
     if (result.usage) {
+      await db.insert(messageTable).values({
+        conversationId,
+        content: result.text,
+        role: 'assistant',
+      })
       await deductCredits({
         userId: user.userId,
         llmSlug: model, // Using model ID
@@ -60,6 +69,16 @@ export async function POST(req: Request) {
     messages,
     system,
     onFinish: async (completion) => {
+      await db.insert(messageTable).values({
+        conversationId,
+        content: messages[messages.length - 1].content,
+        role: 'user',
+      });
+      await db.insert(messageTable).values({
+        conversationId,
+        content: completion.text,
+        role: 'assistant',
+      });
       if (completion.usage) {
         await deductCredits({
           userId: user.userId,
