@@ -1,6 +1,6 @@
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
-import { db } from "@/db";
+import { db, readDb } from "@/db";
 import { conversations, conversationsUsers } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
 import { desc, eq } from "drizzle-orm";
@@ -9,7 +9,7 @@ export const conversationRouter = router({
   getAllConversations: protectedProcedure
     .query(async ({ ctx }) => {
       try {
-        const userConversations = await db
+        const userConversations = await readDb
           .select({
             id: conversations.id,
             title: conversations.title,
@@ -75,7 +75,7 @@ export const conversationRouter = router({
         const newConversation = await db.transaction(async (tx) => {
           // Prepare the userId once to avoid repeated access
           const userId = ctx.user?.userId || '';
-          
+
           const [conversation] = await tx
             .insert(conversations)
             .values({
