@@ -2,7 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server";
 import { auth } from "@clerk/nextjs/server";
 
-export const config = { runtime: 'edge' };
+export const runtime = 'edge'
 
 const handler = async (req: Request) => {
   const user = await auth();
