@@ -39,8 +39,8 @@ export const messageRouter = router({
     .input(z.object({
       content: z.string(),
       conversationId: z.string(),
-      role: z.enum(['user', 'assistant']),
-      aiAssistantId: z.string().nullable().optional(),
+      role: z.enum(['user', 'assistant', 'system', 'data']),
+      llmId: z.string().nullable().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       const { content, conversationId, role } = input;
