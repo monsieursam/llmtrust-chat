@@ -3,11 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Loader, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-// import { createConversation, getConversations } from '@/app/actions/conversations';
-import { useFormStatus } from 'react-dom';
 import { useConversations } from '@/hooks/use-conversations';
-// import { createConversation } from '@/actions/conversations';
-import type { Conversation } from '@/db/schema';
 
 export function ConversationList() {
   const router = useRouter();

@@ -71,21 +71,24 @@ export const conversationRouter = router({
         }
 
         // Create a new conversation
-        const [newConversation] = await db
-          .insert(conversations)
-          .values({
-            title,
-            lastMessageAt: new Date(),
-          })
-          .returning();
+        const newConversation = await db.transaction(async (tx) => {
+          const [conversation] = await tx
+            .insert(conversations)
+            .values({
+              title,
+              lastMessageAt: new Date(),
+            })
+            .returning();
 
-        // Create the user-conversation relationship
-        await db
-          .insert(conversationsUsers)
-          .values({
-            userId: ctx.user?.userId || '',
-            conversationId: newConversation.id,
-          });
+          await tx
+            .insert(conversationsUsers)
+            .values({
+              userId: ctx.user?.userId || '',
+              conversationId: conversation.id,
+            });
+
+          return conversation;
+        });
 
         return newConversation;
       } catch (error) {

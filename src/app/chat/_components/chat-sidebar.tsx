@@ -4,7 +4,6 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { ConversationList } from '@/app/chat/_components/conversation-list'
 import Link from 'next/link'
 import { StarIcon } from 'lucide-react'
-import { useConversations } from '@/hooks/use-conversations'
 import { Suspense } from 'react'
 import { NavUser } from '@/components/nav-user'
 
