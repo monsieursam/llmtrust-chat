@@ -39,7 +39,7 @@ export function TRPCProviderContainer({ children }) {
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: 'http://localhost:3000/api/trpc',
+          url: `${process.env.NEXT_PUBLIC_API_URL}/api/trpc`,
         }),
       ],
     }),
