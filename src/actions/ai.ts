@@ -1,6 +1,6 @@
 'use server';
 
-import { generateText, streamText, type CoreMessage, type LanguageModelV1 } from 'ai';
+import { generateText, type CoreMessage, type LanguageModelV1 } from 'ai';
 import { openai } from '@ai-sdk/openai';
 
 interface PromptProps {
