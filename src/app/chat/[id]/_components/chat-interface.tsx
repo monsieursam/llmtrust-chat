@@ -19,6 +19,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useConversations } from '@/hooks/use-conversations';
 import { useQueryClient } from '@tanstack/react-query';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Props {
   llms: LLM[];
@@ -77,7 +78,7 @@ export default function ChatInterface({ llms }: Props) {
 
   return (
     <div className="flex flex-1 flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-2">  {/* Added pb-2 to create some space at the bottom */}
         <div className="space-y-6">
           {messages.map(message => (
             <div
@@ -107,7 +108,7 @@ export default function ChatInterface({ llms }: Props) {
         </div>
       </div>
 
-      <div className="border-t p-4 w-full">
+      <div className="border-t p-4 w-full sticky bottom-0 bg-background z-10">
         <form onSubmit={handleSendMessage} className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -134,11 +135,18 @@ export default function ChatInterface({ llms }: Props) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Input
+          <Textarea
             value={input}
             placeholder={`Message ${selectedLLM?.name || 'AI'}...`}
             onChange={handleInputChange}
-            className="flex-1"
+            className="flex-1 min-h-[40px] resize-none"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+                setInput('');
+              }
+            }}
           />
           <Button type="submit" size="icon">
             <Send className="h-4 w-4" />
