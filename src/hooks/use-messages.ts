@@ -10,26 +10,15 @@ export function useMessages(conversationId: string) {
   // Query for fetching messages for a specific conversation
   const query = useQuery(messageQuery);
 
-  // Mutation for saving a new message
-  const createMessage = useMutation(trpc.message.createMessage.mutationOptions({
-    onSuccess: (newMessage) => {
-      // Invalidate the messages query to refetch
-      queryClient.invalidateQueries(
-        messageQuery,
-      );
-      // Invalidate the credits query to refetch
-      queryClient.invalidateQueries(
-        creditsQuery,
-      );
-    },
-  }));
+  const invalidateMessageQuery = () => {
+    queryClient.invalidateQueries(messageQuery);
+  }
 
   return {
     messages: query.data || [],
+    invalidateMessageQuery,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
-    saveMessage: createMessage.mutate,
-    isSaving: createMessage.isPending,
   };
 }

@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { useConversations } from '@/hooks/use-conversations';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   llms: LLM[];
@@ -25,7 +26,7 @@ interface Props {
 
 export default function ChatInterface({ llms }: Props) {
   const { id } = useParams();
-  const { messages: messageData } = useMessages(id as string);
+  const { messages: messageData, invalidateMessageQuery } = useMessages(id as string);
   const { updateConversation } = useConversations();
   const [selectedLLM, setSelectedLLM] = useState<LLM | null>(llms.length > 0 ? llms[0] : null);
 
@@ -41,7 +42,11 @@ export default function ChatInterface({ llms }: Props) {
       conversationId: id as string,
       model: selectedLLM?.slug || 'gpt-3.5-turbo',
     },
-  });
+    onFinish: async () => {
+      invalidateMessageQuery();
+    }
+  })
+    ;
 
 
   const handleSendMessage = async (e:
@@ -49,6 +54,7 @@ export default function ChatInterface({ llms }: Props) {
   ) => {
     e.preventDefault();
     handleSubmit();
+    setInput('');
 
     if (messages.length === 0) {
       const { text } = await getAnswer({
@@ -67,8 +73,6 @@ export default function ChatInterface({ llms }: Props) {
         title: text,
       })
     }
-
-    setInput('');
   }
 
   return (
