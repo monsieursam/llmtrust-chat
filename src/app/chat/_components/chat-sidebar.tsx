@@ -29,7 +29,7 @@ export default function ChatSidebar() {
       <SidebarContent>
         <ConversationList />
       </SidebarContent>
-      <SidebarFooter className="h-16 border-b border-sidebar-border">
+      <SidebarFooter>
         <NavUser />
       </SidebarFooter>
     </Sidebar>

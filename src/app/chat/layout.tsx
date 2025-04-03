@@ -16,12 +16,13 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ThemeProvider>
-      <ClerkProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body
-            className={'antialiased min-h-screen flex flex-col'}
-          >
+
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={'antialiased min-h-screen flex flex-col'}
+        >
+          <ThemeProvider>
             <TRPCProviderContainer>
               <SidebarProvider>
                 <ChatSidebar />
@@ -34,9 +35,9 @@ export default async function RootLayout({
                 </SidebarInset>
               </SidebarProvider>
             </TRPCProviderContainer>
-          </body>
-        </html>
-      </ClerkProvider>
-    </ThemeProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
