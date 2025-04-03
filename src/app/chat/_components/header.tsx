@@ -1,13 +1,10 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Fragment } from "react"
-import { SignInButton, useAuth } from "@clerk/nextjs"
+import { useAuth } from "@clerk/nextjs"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ModeToggle } from "@/components/mode-toggle"
-import { WalletButtonContainer } from "@/components/wallet-button"
+import { WalletButton } from "@/components/wallet-button"
 
 export function Header() {
   const user = useAuth()
@@ -28,7 +25,7 @@ export function Header() {
       </div>
       <div className="flex gap-2">
         {isSignedIn && (
-          <WalletButtonContainer />
+          <WalletButton />
         )}
         <ModeToggle />
       </div>

@@ -21,6 +21,8 @@ export function ConversationList() {
     }
   };
 
+  console.log(pathname);
+
   return (
     <div className="flex flex-col h-full">
       <div className="p-2">
@@ -46,7 +48,7 @@ export function ConversationList() {
             <SidebarMenuButton
               asChild
               key={conversation.id}
-              className={pathname === conversation.id ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
+              className={pathname === `/chat/${conversation.id}` ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
             >
               <Link href={`/chat/${conversation.id}`} className="flex items-center gap-2">
                 {conversation.title}

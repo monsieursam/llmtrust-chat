@@ -14,7 +14,7 @@ import useFetch from "@/hooks/use-fetch";
 import { TRPCProviderContainer } from "@/providers/trpc-provider";
 
 
-function WalletButton() {
+export function WalletButton() {
   const { data: balance } = useCredits();
   const [amount, setAmount] = useState(5);
   const { isSignedIn } = useAuth();

@@ -1,4 +1,3 @@
-import { getAnswer } from '@/actions/ai';
 import { deductCredits, getUserCreditBalance } from '@/actions/credits';
 import { db } from '@/db';
 import { messages as messageTable } from '@/db/schema';
@@ -15,7 +14,7 @@ const allProviders = {
 };
 
 export async function POST(req: Request) {
-  const { messages, system, provider, model, stream, conversationId } = await req.json();
+  const { messages, system, provider, model, conversationId } = await req.json();
   const user = await auth();
 
   if (!user?.userId) {
@@ -28,41 +27,10 @@ export async function POST(req: Request) {
   if (!success || balance <= 0) {
     return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
   }
-
-
   const currentProvider = allProviders[provider as keyof typeof allProviders];
 
   if (!currentProvider) {
     return NextResponse.json({ error: 'Provider not found' }, { status: 404 });
-  }
-
-
-
-  if (!stream) {
-    const result = await getAnswer({
-      provider,
-      model,
-      messages,
-      system,
-    });
-
-    // Deduct credits based on token usage
-    if (result.usage) {
-      await db.insert(messageTable).values({
-        userId: user.userId,
-        conversationId,
-        content: result.text,
-        role: 'assistant',
-      })
-      await deductCredits({
-        userId: user.userId,
-        llmSlug: model, // Using model ID
-        promptTokens: result.usage.promptTokens || 0,
-        completionTokens: result.usage.completionTokens || 0,
-      });
-    }
-
-    return NextResponse.json(result);
   }
 
   const result = streamText({
