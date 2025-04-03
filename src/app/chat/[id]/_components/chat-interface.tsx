@@ -90,7 +90,7 @@ export default function ChatInterface({ llms }: Props) {
             >
               <div
                 className={cn(
-                  'rounded-lg px-4 py-2 max-w-[85%] whitespace-pre-wrap',
+                  'rounded-lg px-4 py-2 whitespace-pre-wrap',
                   message.role === 'user'
                     ? 'bg-primary text-primary-foreground'
                     : ''
@@ -108,20 +108,20 @@ export default function ChatInterface({ llms }: Props) {
         </div>
       </div>
 
-      <div className="border-t p-4 w-full sticky bottom-0 bg-background z-10">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+      <div className="border-t p-2 sm:p-4 w-full sticky bottom-0 bg-background z-10">  {/* Reduced padding on small screens */}
+        <form onSubmit={handleSendMessage} className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="w-full sm:w-auto flex items-center gap-2 mb-2 sm:mb-0">
                 {selectedLLM ? (
                   <>
-                    <span>{selectedLLM.name}</span>
-                    <Badge variant="secondary" className="ml-1">{selectedLLM.provider}</Badge>
+                    <span className="truncate max-w-[100px]">{selectedLLM.name}</span>
+                    <Badge variant="secondary" className="ml-1 whitespace-nowrap">{selectedLLM.provider}</Badge>
                   </>
                 ) : (
                   <span>Select LLM</span>
                 )}
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 flex-shrink-0" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -135,22 +135,24 @@ export default function ChatInterface({ llms }: Props) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Textarea
-            value={input}
-            placeholder={`Message ${selectedLLM?.name || 'AI'}...`}
-            onChange={handleInputChange}
-            className="flex-1 min-h-[40px] resize-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit();
-                setInput('');
-              }
-            }}
-          />
-          <Button type="submit" size="icon">
-            <Send className="h-4 w-4" />
-          </Button>
+          <div className="flex w-full gap-2 items-center">
+            <Textarea
+              value={input}
+              placeholder={`Message ${selectedLLM?.name || 'AI'}...`}
+              onChange={handleInputChange}
+              className="flex-1 min-h-[40px] max-h-[120px] resize-none"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                  setInput('');
+                }
+              }}
+            />
+            <Button type="submit" size="icon" className="flex-shrink-0">
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </form>
       </div>
     </div>
