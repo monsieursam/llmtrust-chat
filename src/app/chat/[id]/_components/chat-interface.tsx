@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { useConversations } from '@/hooks/use-conversations';
 import { useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '@/components/ui/textarea';
+import { MarkdownRenderer } from '@/components/markdown-renderer';
 
 interface Props {
   llms: LLM[];
@@ -99,7 +100,7 @@ export default function ChatInterface({ llms }: Props) {
                 {message.parts.map(part => {
                   switch (part.type) {
                     case 'text':
-                      return <div key={`${message.id}-${part.text}`}>{part.text}</div>;
+                      return <MarkdownRenderer key={`${message.id}-${part.text}`} content={part.text} className="prose prose-sm dark:prose-invert max-w-none" />;
                   }
                 })}
               </div>

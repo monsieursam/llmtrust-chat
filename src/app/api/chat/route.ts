@@ -34,9 +34,12 @@ export async function POST(req: Request) {
   }
 
   const result = streamText({
-    model: currentProvider(model),
+    model: openai.responses('gpt-4o-mini'),
     messages,
     system,
+    tools: {
+      web_search_preview: currentProvider.tools.webSearchPreview(),
+    },
     onFinish: async (completion) => {
       await db.insert(messageTable).values({
         conversationId,
