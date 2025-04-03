@@ -1,12 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Loader, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useConversations } from '@/hooks/use-conversations';
+import { SidebarMenuButton } from '@/components/ui/sidebar';
+import Link from 'next/link';
 
 export function ConversationList() {
   const router = useRouter();
+  const pathname = usePathname();
+
   const { createConversation, isCreating, conversations } = useConversations();
 
   const handleSubmit = async () => {
@@ -39,15 +43,15 @@ export function ConversationList() {
       <div className="flex-1 overflow-auto p-2">
         <ul className="space-y-2">
           {conversations?.map((conversation) => (
-            <li key={conversation.id}>
-              <Button
-                variant="ghost"
-                className="w-full justify-start truncate"
-                onClick={() => router.push(`/chat/${conversation.id}`)}
-              >
+            <SidebarMenuButton
+              asChild
+              key={conversation.id}
+              className={pathname === conversation.id ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}
+            >
+              <Link href={`/chat/${conversation.id}`} className="flex items-center gap-2">
                 {conversation.title}
-              </Button>
-            </li>
+              </Link>
+            </SidebarMenuButton>
           ))}
         </ul>
       </div>

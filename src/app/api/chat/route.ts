@@ -49,6 +49,7 @@ export async function POST(req: Request) {
     // Deduct credits based on token usage
     if (result.usage) {
       await db.insert(messageTable).values({
+        userId: user.userId,
         conversationId,
         content: result.text,
         role: 'assistant',
