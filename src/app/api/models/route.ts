@@ -34,6 +34,7 @@ export async function GET() {
 
     return NextResponse.json(llmWithAiApps);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error },
       { status: 500 }

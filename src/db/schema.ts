@@ -48,7 +48,7 @@ export const llms = pgTable('llm', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
-  created_date: text('created'),
+  created_date: text('created_date'),
   website: text('website'),
   description: text('description'),
   provider: text('provider'),
@@ -92,7 +92,7 @@ export const apiKeys = pgTable('api_key', {
 
 export const credits = pgTable('credit', {
   id: uuid('id').primaryKey().defaultRandom(),
-  amount: decimal('amount', { precision: 10, scale: 2 }),
+  amount: decimal('amount', { precision: 20, scale: 18 }),
   userId: text('userId').references(() => users.id),
   type: creditTransactionTypeEnum('type').notNull(),
 

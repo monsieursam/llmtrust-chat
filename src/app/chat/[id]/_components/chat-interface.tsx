@@ -72,7 +72,7 @@ export default function ChatInterface({ llms }: Props) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-1 flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <div className="space-y-6">
           {messages.map(message => (
@@ -104,7 +104,7 @@ export default function ChatInterface({ llms }: Props) {
       </div>
 
       <div className="border-t p-4 w-full">
-        <div className="flex items-center mb-2">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center gap-2">
@@ -130,8 +130,6 @@ export default function ChatInterface({ llms }: Props) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
           <Input
             value={input}
             placeholder={`Message ${selectedLLM?.name || 'AI'}...`}

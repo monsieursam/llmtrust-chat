@@ -8,7 +8,7 @@ import { StarIcon } from 'lucide-react'
 
 export default function ChatSidebar() {
   return (
-    <Sidebar>
+    <Sidebar variant="inset">
       <SidebarHeader className="">
         <SidebarMenu>
           <SidebarMenuItem>

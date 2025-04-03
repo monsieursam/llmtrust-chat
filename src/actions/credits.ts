@@ -28,10 +28,11 @@ export async function deductCredits({
 
     // Calculate the cost based on token usage and model pricing
     const promptCost = model.pricing_input
-      ? Number(model.pricing_input) * (promptTokens / 1000)
+      ? promptTokens * Number(model.pricing_input) / 1000000
       : 0;
+
     const completionCost = model.pricing_output
-      ? Number(model.pricing_output) * (completionTokens / 1000)
+      ? completionTokens * Number(model.pricing_output) / 1000000
       : 0;
 
     // Total cost for this request

@@ -37,7 +37,7 @@ export function ModelForm({ initialData }: ModelFormProps) {
         await createLLM(data);
       }
       // Navigate back to models list after successful submission
-      router.push('/admin/models');
+      // router.push('/admin/models');
     } catch (error) {
       console.error('Error saving model:', error);
     }
@@ -245,21 +245,37 @@ export function ModelForm({ initialData }: ModelFormProps) {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="pricing.output"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Output Token Cost</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" step="0.0001" min="0" placeholder="0.0002" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
             </div>
           </div> */}
+
+          <FormField
+            control={form.control}
+            name="pricing_output"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Output Token Cost</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" step="0.0001" min="0" placeholder="0.0002" value={field.value || ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="pricing_input"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Input Token Cost</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" step="0.0001" min="0" placeholder="0.0002" value={field.value || ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button type="submit" className="w-full">
             {

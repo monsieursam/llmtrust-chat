@@ -27,13 +27,15 @@ export async function PUT(request: Request, { params }: { params: Params }) {
   try {
     const { slug } = await params;
     const body = await request.json();
+    const { createdAt, updatedAt, ...updateData } = body;
     const data = await db
       .update(llms)
-      .set({ ...body })
+      .set({ ...updateData })
       .where(eq(llms.slug, slug))
 
     return NextResponse.json(data);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error },
       { status: 500 }

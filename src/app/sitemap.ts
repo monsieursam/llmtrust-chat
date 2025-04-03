@@ -28,7 +28,7 @@ export default async function sitemap() {
     const llms = await fetchAllLLM();
     const llmRoutes = llms.map((llm) => ({
       url: `${baseUrl}/models/${llm.slug}`,
-      lastModified: new Date(llm.updatedAt),
+      lastModified: llm.updatedAt,
       changeFrequency: "daily",
       priority: 0.9
     }));

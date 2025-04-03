@@ -5,6 +5,7 @@ export function useMessages(conversationId: string) {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
   const messageQuery = trpc.message.getMessages.queryOptions({ conversationId });
+  const creditsQuery = trpc.credits.getBalance.queryOptions();
 
   // Query for fetching messages for a specific conversation
   const query = useQuery(messageQuery);
@@ -15,6 +16,10 @@ export function useMessages(conversationId: string) {
       // Invalidate the messages query to refetch
       queryClient.invalidateQueries(
         messageQuery,
+      );
+      // Invalidate the credits query to refetch
+      queryClient.invalidateQueries(
+        creditsQuery,
       );
     },
   }));
