@@ -8,9 +8,21 @@ import "../globals.css";
 import { TRPCProviderContainer } from '@/providers/trpc-provider';
 import { Header } from './_components/header';
 import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '../(home)/_components/theme-provider';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 
-export default async function RootLayout({
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -20,15 +32,21 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={'antialiased min-h-screen flex flex-col'}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
         >
-          <ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <TRPCProviderContainer>
+
               <SidebarProvider>
                 <ChatSidebar />
                 <SidebarInset>
                   <Header />
-                  <main className="flex flex-1 w-full">
+                  <main className="flex flex-1">
                     {children}
                   </main>
                   <Toaster />
@@ -36,6 +54,7 @@ export default async function RootLayout({
               </SidebarProvider>
             </TRPCProviderContainer>
           </ThemeProvider>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

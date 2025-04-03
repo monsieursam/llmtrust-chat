@@ -4,10 +4,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Fragment } from "react"
-import { SignInButton, useAuth } from "@clerk/nextjs"
+import { useAuth } from "@clerk/nextjs"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { ModeToggle } from "./mode-toggle"
-import { WalletButtonContainer } from "./wallet-button"
+import { WalletButtonContainer } from "@/components/wallet-button"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function Header() {
   const pathname = usePathname()

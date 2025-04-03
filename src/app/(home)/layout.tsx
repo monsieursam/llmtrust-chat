@@ -7,7 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react"
 
 import "../globals.css";
-import { ThemeProvider } from "./_components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "./_components/header";
 import { Footer } from "./_components/footer";
 import { AppSidebar } from "./_components/app-sidebar";
